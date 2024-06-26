@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "words")
-public class Word {
+@Table(name = "droppedwords")
+public class DroppedWord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -22,7 +22,7 @@ public class Word {
     @Column(name = "meaning")
     private String meaning;
 
-    public Word(String word, String meaning) {
+    public DroppedWord(String word, String meaning) {
         this.word = word;
         this.meaning = meaning;
     }

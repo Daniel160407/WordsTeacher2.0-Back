@@ -1,6 +1,7 @@
 package com.wordsteacher2.util;
 
 import com.wordsteacher2.dto.WordDto;
+import com.wordsteacher2.model.DroppedWord;
 import com.wordsteacher2.model.Word;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,18 @@ public class ModelConverter {
         List<WordDto> wordDtos = new ArrayList<>();
         words.forEach(word -> wordDtos.add(new WordDto(word.getWord(), word.getMeaning())));
         return wordDtos;
+    }
+
+    public List<Word> convertDtoToWordsList(List<WordDto> wordDtos) {
+        List<Word> words = new ArrayList<>();
+        wordDtos.forEach(wordDto -> words.add(new Word(wordDto.getWord(), wordDto.getMeaning())));
+        return words;
+    }
+
+    public List<DroppedWord> convert(List<WordDto> wordDtos) {
+        List<DroppedWord> droppedWords = new ArrayList<>();
+        wordDtos.forEach(wordDto -> droppedWords.add(new DroppedWord(wordDto.getWord(), wordDto.getMeaning())));
+        return droppedWords;
     }
 
     public WordDto convert(Word word) {
