@@ -22,7 +22,19 @@ public class ModelConverter {
         return words;
     }
 
-    public List<DroppedWord> convert(List<WordDto> wordDtos) {
+    public List<WordDto> convertDroppedWordsToDtoList(List<DroppedWord> droppedWords) {
+        List<WordDto> wordDtos = new ArrayList<>();
+        droppedWords.forEach(droppedWord -> wordDtos.add(new WordDto(droppedWord.getWord(), droppedWord.getMeaning())));
+        return wordDtos;
+    }
+
+    public List<Word> convertDroppedWordsToWordsList(List<DroppedWord> droppedWords) {
+        List<Word> words = new ArrayList<>();
+        droppedWords.forEach(droppedWord -> words.add(new Word(droppedWord.getWord(), droppedWord.getMeaning())));
+        return words;
+    }
+
+    public List<DroppedWord> convertDtoToDroppedWordsList(List<WordDto> wordDtos) {
         List<DroppedWord> droppedWords = new ArrayList<>();
         wordDtos.forEach(wordDto -> droppedWords.add(new DroppedWord(wordDto.getWord(), wordDto.getMeaning())));
         return droppedWords;

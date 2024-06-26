@@ -25,6 +25,11 @@ public class WordsController {
         return ResponseEntity.ok().body(wordsService.getWords());
     }
 
+    @GetMapping("/level")
+    public ResponseEntity<?> getLevel() {
+        return ResponseEntity.ok().body(wordsService.getLevel());
+    }
+
     @PostMapping
     public ResponseEntity<?> addWord(@RequestBody WordDto wordDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(wordsService.addWord(wordDto));
