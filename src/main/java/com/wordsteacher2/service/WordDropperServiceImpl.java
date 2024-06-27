@@ -28,6 +28,11 @@ public class WordDropperServiceImpl implements WordDropperService {
     }
 
     @Override
+    public List<WordDto> getDroppedWords() {
+        return modelConverter.convertDroppedWordsToDtoList(droppedWordsRepository.findAll());
+    }
+
+    @Override
     public List<WordDto> dropWords(List<WordDto> wordDtos) {
         for (WordDto wordDto : wordDtos) {
             wordsRepository.deleteByWordAndMeaning(wordDto.getWord(), wordDto.getMeaning());

@@ -7,5 +7,7 @@ import java.util.List;
 
 @Service
 public interface WordDropperService {
+    List<WordDto> getDroppedWords();
+
     List<WordDto> dropWords(List<WordDto> wordDtos);
 }
