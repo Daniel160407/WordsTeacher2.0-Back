@@ -13,4 +13,7 @@ public interface WordsService {
     List<WordDto> addWord(WordDto wordDto);
 
     Level getLevel();
+
+    List<WordDto> changeWord(List<WordDto> wordDtos);
+    List<WordDto> deleteWord(WordDto wordDto);
 }

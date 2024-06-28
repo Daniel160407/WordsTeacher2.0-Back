@@ -7,4 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface WordsRepository extends JpaRepository<Word, Integer> {
     @Transactional
     void deleteByWordAndMeaning(String word, String meaning);
+
+    Word findByWordAndMeaning(String word, String meaning);
 }

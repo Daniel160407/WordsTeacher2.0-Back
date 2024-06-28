@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/wordsTeacher/words")
 @CrossOrigin(origins = "*")
@@ -33,6 +35,17 @@ public class WordsController {
     @PostMapping
     public ResponseEntity<?> addWord(@RequestBody WordDto wordDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(wordsService.addWord(wordDto));
+    }
+
+    @PutMapping
+    public ResponseEntity<?> changeWord(@RequestBody List<WordDto> wordDtos) {
+        return ResponseEntity.ok().body(wordsService.changeWord(wordDtos));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteWord(@RequestParam String word,
+                                        @RequestParam String meaning) {
+        return ResponseEntity.ok().body(wordsService.deleteWord(new WordDto(word, meaning)));
     }
 
     @RequestMapping(method = RequestMethod.OPTIONS)

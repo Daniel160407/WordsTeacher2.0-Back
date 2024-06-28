@@ -2,6 +2,7 @@ package com.wordsteacher2.service;
 
 import com.wordsteacher2.dto.WordDto;
 import com.wordsteacher2.model.Level;
+import com.wordsteacher2.model.Word;
 import com.wordsteacher2.repository.LevelRepository;
 import com.wordsteacher2.repository.WordsRepository;
 import com.wordsteacher2.util.ModelConverter;
@@ -37,5 +38,24 @@ public class WordsServiceImpl implements WordsService {
     @Override
     public Level getLevel() {
         return levelRepository.findById(1).orElse(null);
+    }
+
+    @Override
+    public List<WordDto> changeWord(List<WordDto> wordDtos) {
+        WordDto original = wordDtos.get(0);
+        WordDto changed = wordDtos.get(1);
+
+        Word foundWord = wordsRepository.findByWordAndMeaning(original.getWord(), original.getMeaning());
+        foundWord.setWord(changed.getWord());
+        foundWord.setMeaning(changed.getMeaning());
+
+        wordsRepository.save(foundWord);
+        return modelConverter.convertWordsToDtoList(wordsRepository.findAll());
+    }
+
+    @Override
+    public List<WordDto> deleteWord(WordDto wordDto) {
+        wordsRepository.deleteByWordAndMeaning(wordDto.getWord(), wordDto.getMeaning());
+        return modelConverter.convertWordsToDtoList(wordsRepository.findAll());
     }
 }
