@@ -23,8 +23,8 @@ public class WordsController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getWords() {
-        return ResponseEntity.ok().body(wordsService.getWords());
+    public ResponseEntity<?> getWords(@RequestParam String wordstype) {
+        return ResponseEntity.ok().body(wordsService.getWords(wordstype));
     }
 
     @GetMapping("/level")

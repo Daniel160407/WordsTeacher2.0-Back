@@ -8,7 +8,7 @@ import java.util.List;
 
 @Service
 public interface WordsService {
-    List<WordDto> getWords();
+    List<WordDto> getWords(String wordsType);
 
     List<WordDto> addWord(WordDto wordDto);
 

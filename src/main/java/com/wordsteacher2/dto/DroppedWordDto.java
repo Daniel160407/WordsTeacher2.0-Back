@@ -8,4 +8,5 @@ import lombok.Data;
 public class DroppedWordDto {
     private String word;
     private String meaning;
+    private String wordType;
 }

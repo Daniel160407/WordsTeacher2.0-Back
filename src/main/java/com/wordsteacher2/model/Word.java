@@ -21,9 +21,12 @@ public class Word {
     private String word;
     @Column(name = "meaning")
     private String meaning;
+    @Column(name = "word_type")
+    private String wordType;
 
-    public Word(String word, String meaning) {
+    public Word(String word, String meaning, String wordType) {
         this.word = word;
         this.meaning = meaning;
+        this.wordType = wordType;
     }
 }

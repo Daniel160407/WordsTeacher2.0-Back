@@ -25,8 +25,8 @@ public class WordsServiceImpl implements WordsService {
     }
 
     @Override
-    public List<WordDto> getWords() {
-        return modelConverter.convertWordsToDtoList(wordsRepository.findAll());
+    public List<WordDto> getWords(String wordsType) {
+        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordType(wordsType));
     }
 
     @Override
@@ -48,6 +48,7 @@ public class WordsServiceImpl implements WordsService {
         Word foundWord = wordsRepository.findByWordAndMeaning(original.getWord(), original.getMeaning());
         foundWord.setWord(changed.getWord());
         foundWord.setMeaning(changed.getMeaning());
+        foundWord.setWordType(changed.getWordType());
 
         wordsRepository.save(foundWord);
         return modelConverter.convertWordsToDtoList(wordsRepository.findAll());

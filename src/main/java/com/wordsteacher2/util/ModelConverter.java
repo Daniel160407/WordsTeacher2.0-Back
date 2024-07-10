@@ -14,25 +14,25 @@ import java.util.List;
 public class ModelConverter {
     public List<WordDto> convertWordsToDtoList(List<Word> words) {
         List<WordDto> wordDtos = new ArrayList<>();
-        words.forEach(word -> wordDtos.add(new WordDto(word.getWord(), word.getMeaning())));
+        words.forEach(word -> wordDtos.add(new WordDto(word.getWord(), word.getMeaning(), word.getWordType())));
         return wordDtos;
     }
 
     public List<WordDto> convertDroppedWordsToDtoList(List<DroppedWord> droppedWords) {
         List<WordDto> wordDtos = new ArrayList<>();
-        droppedWords.forEach(droppedWord -> wordDtos.add(new WordDto(droppedWord.getWord(), droppedWord.getMeaning())));
+        droppedWords.forEach(droppedWord -> wordDtos.add(new WordDto(droppedWord.getWord(), droppedWord.getMeaning(), droppedWord.getWordType())));
         return wordDtos;
     }
 
     public List<Word> convertDroppedWordsToWordsList(List<DroppedWord> droppedWords) {
         List<Word> words = new ArrayList<>();
-        droppedWords.forEach(droppedWord -> words.add(new Word(droppedWord.getWord(), droppedWord.getMeaning())));
+        droppedWords.forEach(droppedWord -> words.add(new Word(droppedWord.getWord(), droppedWord.getMeaning(), droppedWord.getWordType())));
         return words;
     }
 
     public List<DroppedWord> convertDtoToDroppedWordsList(List<WordDto> wordDtos) {
         List<DroppedWord> droppedWords = new ArrayList<>();
-        wordDtos.forEach(wordDto -> droppedWords.add(new DroppedWord(wordDto.getWord(), wordDto.getMeaning())));
+        wordDtos.forEach(wordDto -> droppedWords.add(new DroppedWord(wordDto.getWord(), wordDto.getMeaning(), wordDto.getWordType())));
         return droppedWords;
     }
 
@@ -46,6 +46,7 @@ public class ModelConverter {
         return Word.builder()
                 .word(wordDto.getWord())
                 .meaning(wordDto.getMeaning())
+                .wordType(wordDto.getWordType())
                 .build();
     }
     public Dictionary convert(DictionaryDto dictionaryDto){
