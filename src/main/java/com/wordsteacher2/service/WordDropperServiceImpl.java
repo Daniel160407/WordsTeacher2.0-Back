@@ -38,12 +38,14 @@ public class WordDropperServiceImpl implements WordDropperService {
             wordsRepository.deleteByWordAndMeaning(wordDto.getWord(), wordDto.getMeaning());
         }
         droppedWordsRepository.saveAll(modelConverter.convertDtoToDroppedWordsList(wordDtos));
-        if (wordsRepository.findAll().isEmpty()) {
+        if (wordsRepository.findAllByWordType("word").isEmpty()) {
             List<Word> droppedWords = modelConverter.convertDroppedWordsToWordsList(droppedWordsRepository.findAll());
             wordsRepository.saveAll(droppedWords);
 
             for (Word word : droppedWords) {
-                droppedWordsRepository.deleteByWordAndMeaning(word.getWord(), word.getMeaning());
+                if(word.getWordType().equals("word")){
+                    droppedWordsRepository.deleteByWordAndMeaning(word.getWord(), word.getMeaning());
+                }
             }
 
             Level level = levelRepository.findById(1).orElse(null);
@@ -59,6 +61,6 @@ public class WordDropperServiceImpl implements WordDropperService {
 
             levelRepository.save(level);
         }
-        return modelConverter.convertWordsToDtoList(wordsRepository.findAll());
+        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordType("word"));
     }
 }

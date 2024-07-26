@@ -32,7 +32,7 @@ public class WordsServiceImpl implements WordsService {
     @Override
     public List<WordDto> addWord(WordDto wordDto) {
         wordsRepository.save(modelConverter.convert(wordDto));
-        return modelConverter.convertWordsToDtoList(wordsRepository.findAll());
+        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordType("word"));
     }
 
     @Override
