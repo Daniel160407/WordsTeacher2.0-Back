@@ -29,7 +29,10 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public List<DictionaryDto> addWord(DictionaryDto dictionaryDto) {
-        dictionaryRepository.save(modelConverter.convert(dictionaryDto));
+        Dictionary existedWord = dictionaryRepository.findByWordAndMeaning(dictionaryDto.getWord(), dictionaryDto.getMeaning());
+        if (existedWord == null) {
+            dictionaryRepository.save(modelConverter.convert(dictionaryDto));
+        }
         return modelConverter.convertDictionaryToDtoList(dictionaryRepository.findAllSortedByFirstLetter());
     }
 
