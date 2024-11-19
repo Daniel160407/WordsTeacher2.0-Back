@@ -10,6 +10,9 @@ public interface WordsRepository extends JpaRepository<Word, Integer> {
     @Transactional
     void deleteByWordAndMeaning(String word, String meaning);
 
+    @Transactional
+    void deleteAllByWordType(String type);
+
     Word findByWordAndMeaning(String word, String meaning);
 
     List<Word> findAllByWordType(String wordsType);

@@ -39,27 +39,30 @@ public class WordDropperServiceImpl implements WordDropperService {
         }
         droppedWordsRepository.saveAll(modelConverter.convertDtoToDroppedWordsList(wordDtos));
         if (wordsRepository.findAllByWordType("word").isEmpty()) {
-            List<Word> droppedWords = modelConverter.convertDroppedWordsToWordsList(droppedWordsRepository.findAll());
+            List<Word> droppedWords = modelConverter.convertDroppedWordsToWordsList(droppedWordsRepository.findAllByWordType("word"));
             wordsRepository.saveAll(droppedWords);
-
-            for (Word word : droppedWords) {
-                if(word.getWordType().equals("word")){
-                    droppedWordsRepository.deleteByWordAndMeaning(word.getWord(), word.getMeaning());
-                }
-            }
+            droppedWordsRepository.deleteAllByWordType("word");
 
             Level level = levelRepository.findById(1).orElse(null);
             assert level != null;
 
             if (level.getLevel() >= 5) {
                 level.setLevel(1);
-                wordsRepository.deleteAll();
-                droppedWordsRepository.deleteAll();
+                wordsRepository.deleteAllByWordType("word");
+                droppedWordsRepository.deleteAllByWordType("word");
             } else {
                 level.setLevel(level.getLevel() + 1);
             }
 
             levelRepository.save(level);
+        } else if (wordsRepository.findAllByWordType("difficult").isEmpty()) {
+            List<Word> droppedWords = modelConverter.convertDroppedWordsToWordsList(droppedWordsRepository.findAllByWordType("difficult"));
+            wordsRepository.saveAll(droppedWords);
+            droppedWordsRepository.deleteAllByWordType("difficult");
+        }
+
+        if (wordDtos.get(0).getWordType().equals("difficult")) {
+            return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordType("difficult"));
         }
         return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordType("word"));
     }
