@@ -1,7 +1,9 @@
 package com.wordsteacher2.util;
 
 import com.wordsteacher2.dto.DictionaryDto;
+import com.wordsteacher2.dto.DictionaryListWithAdvancementDto;
 import com.wordsteacher2.dto.WordDto;
+import com.wordsteacher2.dto.WordListWithAdvancementDto;
 import com.wordsteacher2.model.Dictionary;
 import com.wordsteacher2.model.DroppedWord;
 import com.wordsteacher2.model.Word;
@@ -49,10 +51,29 @@ public class ModelConverter {
                 .wordType(wordDto.getWordType())
                 .build();
     }
-    public Dictionary convert(DictionaryDto dictionaryDto){
+
+    public Dictionary convert(DictionaryDto dictionaryDto) {
         return Dictionary.builder()
                 .word(dictionaryDto.getWord())
                 .meaning(dictionaryDto.getMeaning())
+                .build();
+    }
+
+    public WordListWithAdvancementDto convert(List<Word> words, String advancement) {
+        List<WordDto> wordDtos = new ArrayList<>();
+        words.forEach(word -> wordDtos.add(new WordDto(word.getWord(), word.getMeaning())));
+        return WordListWithAdvancementDto.builder()
+                .wordDtos(wordDtos)
+                .advancement(advancement)
+                .build();
+    }
+
+    public DictionaryListWithAdvancementDto convertDict(List<Dictionary> dictionary, String advancement) {
+        List<DictionaryDto> dictionaryDtos = new ArrayList<>();
+        dictionary.forEach(word -> dictionaryDtos.add(new DictionaryDto(word.getWord(), word.getMeaning())));
+        return DictionaryListWithAdvancementDto.builder()
+                .dictionaryDtos(dictionaryDtos)
+                .advancement(advancement)
                 .build();
     }
 }

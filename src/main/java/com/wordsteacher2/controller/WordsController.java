@@ -44,8 +44,9 @@ public class WordsController {
 
     @DeleteMapping
     public ResponseEntity<?> deleteWord(@RequestParam String word,
-                                        @RequestParam String meaning) {
-        return ResponseEntity.ok().body(wordsService.deleteWord(new WordDto(word, meaning)));
+                                        @RequestParam String meaning,
+                                        @RequestParam String wordtype) {
+        return ResponseEntity.ok().body(wordsService.deleteWord(new WordDto(word, meaning, wordtype)));
     }
 
     @RequestMapping(method = RequestMethod.OPTIONS)

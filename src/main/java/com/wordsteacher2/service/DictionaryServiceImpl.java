@@ -1,8 +1,12 @@
 package com.wordsteacher2.service;
 
 import com.wordsteacher2.dto.DictionaryDto;
+import com.wordsteacher2.dto.DictionaryListWithAdvancementDto;
 import com.wordsteacher2.model.Dictionary;
+import com.wordsteacher2.model.Statistic;
 import com.wordsteacher2.repository.DictionaryRepository;
+import com.wordsteacher2.repository.StatisticsRepository;
+import com.wordsteacher2.service.advancement.Advancement;
 import com.wordsteacher2.util.ModelConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,12 +17,17 @@ import java.util.List;
 @Service
 public class DictionaryServiceImpl implements DictionaryService {
     private final DictionaryRepository dictionaryRepository;
+    private final StatisticsRepository statisticsRepository;
     private final ModelConverter modelConverter;
+    private final StatisticsService statisticsService;
+    private Advancement advancement;
 
     @Autowired
-    public DictionaryServiceImpl(DictionaryRepository dictionaryRepository, ModelConverter modelConverter) {
+    public DictionaryServiceImpl(DictionaryRepository dictionaryRepository, StatisticsRepository statisticsRepository, ModelConverter modelConverter, StatisticsService statisticsService) {
         this.dictionaryRepository = dictionaryRepository;
+        this.statisticsRepository = statisticsRepository;
         this.modelConverter = modelConverter;
+        this.statisticsService = statisticsService;
     }
 
     @Override
@@ -28,17 +37,31 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     @Override
-    public List<DictionaryDto> addWord(DictionaryDto dictionaryDto) {
+    public DictionaryListWithAdvancementDto addWord(DictionaryDto dictionaryDto) {
         Dictionary existedWord = dictionaryRepository.findByWordAndMeaning(dictionaryDto.getWord(), dictionaryDto.getMeaning());
         if (existedWord == null) {
             dictionaryRepository.save(modelConverter.convert(dictionaryDto));
         }
-        return modelConverter.convertDictionaryToDtoList(dictionaryRepository.findAllSortedByFirstLetter());
+
+        Statistic statistic = statisticsRepository.findById(1).orElse(null);
+        assert statistic != null;
+        statistic.setWordsLearned(statistic.getWordsLearned() + 1);
+        statisticsRepository.save(statistic);
+        this.advancement = statisticsService.getLearnedWordsAdvancement();
+
+
+        return modelConverter.convertDict(dictionaryRepository.findAllSortedByFirstLetter(), advancement != null ? advancement.getDescription() : null);
     }
 
     @Override
     public List<DictionaryDto> deleteWord(DictionaryDto dictionaryDto) {
         dictionaryRepository.deleteByWordAndMeaning(dictionaryDto.getWord(), dictionaryDto.getMeaning());
+
+        Statistic statistic = statisticsRepository.findById(1).orElse(null);
+        assert statistic != null;
+        statistic.setWordsLearned(statistic.getWordsLearned() - 1);
+        statisticsRepository.save(statistic);
+
         return modelConverter.convertDictionaryToDtoList(dictionaryRepository.findAllSortedByFirstLetter());
     }
 

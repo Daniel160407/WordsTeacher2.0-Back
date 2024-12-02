@@ -1,0 +1,1 @@
+insert into statistics (learned_words, cycles, day_streak) values (0,0,0);

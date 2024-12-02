@@ -32,7 +32,7 @@ public class WordsServiceImpl implements WordsService {
     @Override
     public List<WordDto> addWord(WordDto wordDto) {
         wordsRepository.save(modelConverter.convert(wordDto));
-        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordType("word"));
+        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordType(wordDto.getWordType()));
     }
 
     @Override
@@ -51,12 +51,12 @@ public class WordsServiceImpl implements WordsService {
         foundWord.setWordType(changed.getWordType());
 
         wordsRepository.save(foundWord);
-        return modelConverter.convertWordsToDtoList(wordsRepository.findAll());
+        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordType(original.getWordType()));
     }
 
     @Override
     public List<WordDto> deleteWord(WordDto wordDto) {
         wordsRepository.deleteByWordAndMeaning(wordDto.getWord(), wordDto.getMeaning());
-        return modelConverter.convertWordsToDtoList(wordsRepository.findAll());
+        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordType(wordDto.getWordType()));
     }
 }

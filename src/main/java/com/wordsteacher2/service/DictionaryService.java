@@ -1,6 +1,7 @@
 package com.wordsteacher2.service;
 
 import com.wordsteacher2.dto.DictionaryDto;
+import com.wordsteacher2.dto.DictionaryListWithAdvancementDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 public interface DictionaryService {
     List<DictionaryDto> getWords();
 
-    List<DictionaryDto> addWord(DictionaryDto dictionaryDto);
+    DictionaryListWithAdvancementDto addWord(DictionaryDto dictionaryDto);
 
     List<DictionaryDto> deleteWord(DictionaryDto dictionaryDto);
 
