@@ -22,8 +22,8 @@ public class DictionaryController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getWords() {
-        return ResponseEntity.ok().body(dictionaryService.getWords());
+    public ResponseEntity<?> getWords(@RequestParam String type) {
+        return ResponseEntity.ok().body(dictionaryService.getWords(type));
     }
 
     @PostMapping

@@ -21,4 +21,9 @@ public class Dictionary {
     private String word;
     @Column(name = "meaning")
     private String meaning;
+
+    public Dictionary(String word, String meaning) {
+        this.word = word;
+        this.meaning = meaning;
+    }
 }

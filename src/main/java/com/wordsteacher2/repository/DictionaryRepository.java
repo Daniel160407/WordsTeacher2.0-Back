@@ -12,8 +12,9 @@ import java.util.List;
 public interface DictionaryRepository extends JpaRepository<Dictionary, Integer> {
     @Query("SELECT d FROM Dictionary d ORDER BY " +
             "CASE " +
-            "WHEN LOWER(SUBSTRING(d.word, 1, 3)) IN ('der', 'die', 'das') THEN SUBSTRING(d.word, 5) " +
-            "ELSE d.word " +
+            "  WHEN LOWER(SUBSTRING(d.word, 1, 3)) IN ('der', 'die', 'das') THEN LOWER(SUBSTRING(d.word, 5)) " +
+            "  WHEN LOWER(SUBSTRING(d.word, 1, 4)) = 'sich' THEN LOWER(SUBSTRING(d.word, 6)) " +
+            "  ELSE LOWER(d.word) " +
             "END ASC")
     List<Dictionary> findAllSortedByFirstLetter();
 

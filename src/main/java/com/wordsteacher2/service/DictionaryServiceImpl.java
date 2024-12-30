@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -31,10 +33,25 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     @Override
-    public List<DictionaryDto> getWords() {
-        List<Dictionary> words = dictionaryRepository.findAll();
-        return modelConverter.convertDictionaryToDtoList(dictionaryRepository.findAllSortedByFirstLetter());
+    public List<DictionaryDto> getWords(String type) {
+        List<Dictionary> words = dictionaryRepository.findAllSortedByFirstLetter();
+
+        if ("word".equals(type)) {
+            Iterator<Dictionary> iterator = words.iterator();
+
+            while (iterator.hasNext()) {
+                Dictionary dictionary = iterator.next();
+                String word = dictionary.getWord();
+
+                if (word.trim().split("\\s+").length > 1 && Arrays.stream(new String[]{"Der", "Die", "Das", "Sich"}).noneMatch(word::startsWith)) {
+                    iterator.remove();
+                }
+            }
+        }
+        System.out.println(words);
+        return modelConverter.convertDictionaryToDtoList(words);
     }
+
 
     @Override
     public DictionaryListWithAdvancementDto addWord(DictionaryDto dictionaryDto) {
