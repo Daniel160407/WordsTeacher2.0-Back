@@ -48,7 +48,6 @@ public class DictionaryServiceImpl implements DictionaryService {
                 }
             }
         }
-        System.out.println(words);
         return modelConverter.convertDictionaryToDtoList(words);
     }
 

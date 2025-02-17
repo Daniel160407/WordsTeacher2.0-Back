@@ -15,5 +15,5 @@ public interface WordsRepository extends JpaRepository<Word, Integer> {
 
     Word findByWordAndMeaning(String word, String meaning);
 
-    List<Word> findAllByWordType(String wordsType);
+    List<Word> findAllByWordTypeAndActive(String wordsType, String active);
 }

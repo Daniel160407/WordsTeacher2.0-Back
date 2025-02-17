@@ -26,13 +26,14 @@ public class WordsServiceImpl implements WordsService {
 
     @Override
     public List<WordDto> getWords(String wordsType) {
-        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordType(wordsType));
+        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordTypeAndActive(wordsType, "true"));
     }
 
     @Override
     public List<WordDto> addWord(WordDto wordDto) {
+        wordDto.setActive("true");
         wordsRepository.save(modelConverter.convert(wordDto));
-        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordType(wordDto.getWordType()));
+        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordTypeAndActive(wordDto.getWordType(), "true"));
     }
 
     @Override
@@ -51,12 +52,12 @@ public class WordsServiceImpl implements WordsService {
         foundWord.setWordType(changed.getWordType());
 
         wordsRepository.save(foundWord);
-        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordType(original.getWordType()));
+        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordTypeAndActive(original.getWordType(), "true"));
     }
 
     @Override
     public List<WordDto> deleteWord(WordDto wordDto) {
         wordsRepository.deleteByWordAndMeaning(wordDto.getWord(), wordDto.getMeaning());
-        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordType(wordDto.getWordType()));
+        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordTypeAndActive(wordDto.getWordType(), "true"));
     }
 }

@@ -23,10 +23,13 @@ public class Word {
     private String meaning;
     @Column(name = "word_type")
     private String wordType;
+    @Column(name = "active")
+    private String active;
 
-    public Word(String word, String meaning, String wordType) {
+    public Word(String word, String meaning, String wordType, String active) {
         this.word = word;
         this.meaning = meaning;
         this.wordType = wordType;
+        this.active = active;
     }
 }
