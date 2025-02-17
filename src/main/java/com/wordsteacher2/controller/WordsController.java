@@ -23,13 +23,13 @@ public class WordsController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getWords(@RequestParam String wordstype) {
-        return ResponseEntity.ok().body(wordsService.getWords(wordstype));
+    public ResponseEntity<?> getWords(@RequestParam String wordstype, @RequestParam Integer userid) {
+        return ResponseEntity.ok().body(wordsService.getWords(wordstype, userid));
     }
 
     @GetMapping("/level")
-    public ResponseEntity<?> getLevel() {
-        return ResponseEntity.ok().body(wordsService.getLevel());
+    public ResponseEntity<?> getLevel(@RequestParam Integer userid) {
+        return ResponseEntity.ok().body(wordsService.getLevel(userid));
     }
 
     @PostMapping
@@ -45,8 +45,9 @@ public class WordsController {
     @DeleteMapping
     public ResponseEntity<?> deleteWord(@RequestParam String word,
                                         @RequestParam String meaning,
-                                        @RequestParam String wordtype) {
-        return ResponseEntity.ok().body(wordsService.deleteWord(new WordDto(word, meaning, wordtype)));
+                                        @RequestParam String wordtype,
+                                        @RequestParam Integer userid) {
+        return ResponseEntity.ok().body(wordsService.deleteWord(new WordDto(word, meaning, wordtype, userid)));
     }
 
     @RequestMapping(method = RequestMethod.OPTIONS)

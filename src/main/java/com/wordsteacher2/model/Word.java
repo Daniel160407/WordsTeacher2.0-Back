@@ -25,11 +25,15 @@ public class Word {
     private String wordType;
     @Column(name = "active")
     private String active;
+    @Column(name = "user_id")
+    private Integer userId;
 
-    public Word(String word, String meaning, String wordType, String active) {
+
+    public Word(String word, String meaning, String wordType, String active, Integer userId) {
         this.word = word;
         this.meaning = meaning;
         this.wordType = wordType;
         this.active = active;
+        this.userId = userId;
     }
 }

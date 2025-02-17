@@ -36,33 +36,35 @@ public class WordDropperServiceImpl implements WordDropperService {
     }
 
     @Override
-    public List<WordDto> getDroppedWords() {
-        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordTypeAndActive("word","false"));
+    public List<WordDto> getDroppedWords(Integer userId) {
+        return modelConverter.convertWordsToDtoList(
+                wordsRepository.findAllByWordTypeAndActiveAndUserId("word", "false", userId));
     }
 
     @Override
     public WordListWithAdvancementDto dropWords(List<WordDto> wordDtos) {
+        Integer userId = wordDtos.get(0).getUserId();
         for (WordDto wordDto : wordDtos) {
-            Word word = wordsRepository.findByWordAndMeaning(wordDto.getWord(), wordDto.getMeaning());
+            Word word = wordsRepository.findByWordAndMeaningAndUserId(wordDto.getWord(), wordDto.getMeaning(), userId);
             word.setActive("false");
             wordsRepository.save(word);
         }
 
-        if (wordsRepository.findAllByWordTypeAndActive("word", "true").isEmpty()) {
-            List<Word> droppedWords = wordsRepository.findAllByWordTypeAndActive("word", "false");
+        if (wordsRepository.findAllByWordTypeAndActiveAndUserId("word", "true", userId).isEmpty()) {
+            List<Word> droppedWords = wordsRepository.findAllByWordTypeAndActiveAndUserId("word", "false", userId);
             for (Word droppedWord : droppedWords) {
                 droppedWord.setActive("true");
                 wordsRepository.save(droppedWord);
             }
 
-            Level level = levelRepository.findById(1).orElse(null);
+            Level level = levelRepository.findByUserId(userId);
             assert level != null;
 
             if (level.getLevel() >= 5) {
                 level.setLevel(1);
-                wordsRepository.deleteAllByWordType("word");
+                wordsRepository.deleteAllByWordTypeAndUserId("word",userId);
 
-                Statistic statistic = statisticsRepository.findById(1).orElse(null);
+                Statistic statistic = statisticsRepository.findByUserId(userId);
                 statistic.setCycles(statistic.getCycles() + 1);
                 statisticsRepository.save(statistic);
                 this.advancement = statisticsService.getCyclesAdvancement();
@@ -71,8 +73,8 @@ public class WordDropperServiceImpl implements WordDropperService {
             }
 
             levelRepository.save(level);
-        } else if (wordsRepository.findAllByWordTypeAndActive("difficult", "true").isEmpty()) {
-            List<Word> droppedWords = wordsRepository.findAllByWordTypeAndActive("difficult", "false");
+        } else if (wordsRepository.findAllByWordTypeAndActiveAndUserId("difficult", "true", userId).isEmpty()) {
+            List<Word> droppedWords = wordsRepository.findAllByWordTypeAndActiveAndUserId("difficult", "false", userId);
             for (Word droppedWord : droppedWords) {
                 droppedWord.setActive("true");
                 wordsRepository.save(droppedWord);
@@ -80,9 +82,9 @@ public class WordDropperServiceImpl implements WordDropperService {
         }
 
         if (!wordDtos.isEmpty() && "difficult".equals(wordDtos.get(0).getWordType())) {
-            return modelConverter.convert(wordsRepository.findAllByWordTypeAndActive("difficult", "true"),
+            return modelConverter.convert(wordsRepository.findAllByWordTypeAndActiveAndUserId("difficult", "true", userId),
                     advancement != null ? advancement.getDescription() : null);
         }
-        return modelConverter.convert(wordsRepository.findAllByWordTypeAndActive("word", "true"), advancement != null ? advancement.getDescription() : null);
+        return modelConverter.convert(wordsRepository.findAllByWordTypeAndActiveAndUserId("word", "true", userId), advancement != null ? advancement.getDescription() : null);
     }
 }

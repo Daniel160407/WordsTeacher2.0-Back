@@ -9,4 +9,5 @@ public class StatisticDto {
     private Integer wordsLearned;
     private Integer cycles;
     private Integer dayStreak;
+    private Integer userId;
 }

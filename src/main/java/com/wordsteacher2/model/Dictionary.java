@@ -21,9 +21,12 @@ public class Dictionary {
     private String word;
     @Column(name = "meaning")
     private String meaning;
+    @Column(name = "user_id")
+    private Integer userId;
 
-    public Dictionary(String word, String meaning) {
+    public Dictionary(String word, String meaning, Integer userId) {
         this.word = word;
         this.meaning = meaning;
+        this.userId = userId;
     }
 }

@@ -23,4 +23,13 @@ public class Statistic {
     private Integer cycles;
     @Column(name = "day_streak")
     private Integer dayStreak;
+    @Column(name = "user_id")
+    private Integer userId;
+
+    public Statistic(Integer wordsLearned, Integer cycles, Integer dayStreak, Integer userId) {
+        this.wordsLearned = wordsLearned;
+        this.cycles = cycles;
+        this.dayStreak = dayStreak;
+        this.userId = userId;
+    }
 }

@@ -25,20 +25,22 @@ public class WordsServiceImpl implements WordsService {
     }
 
     @Override
-    public List<WordDto> getWords(String wordsType) {
-        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordTypeAndActive(wordsType, "true"));
+    public List<WordDto> getWords(String wordsType, Integer userId) {
+        return modelConverter.convertWordsToDtoList(
+                wordsRepository.findAllByWordTypeAndActiveAndUserId(wordsType, "true", userId));
     }
 
     @Override
     public List<WordDto> addWord(WordDto wordDto) {
         wordDto.setActive("true");
         wordsRepository.save(modelConverter.convert(wordDto));
-        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordTypeAndActive(wordDto.getWordType(), "true"));
+        return modelConverter.convertWordsToDtoList(
+                wordsRepository.findAllByWordTypeAndActiveAndUserId(wordDto.getWordType(), "true", wordDto.getUserId()));
     }
 
     @Override
-    public Level getLevel() {
-        return levelRepository.findById(1).orElse(null);
+    public Level getLevel(Integer userId) {
+        return levelRepository.findByUserId(userId);
     }
 
     @Override
@@ -46,18 +48,20 @@ public class WordsServiceImpl implements WordsService {
         WordDto original = wordDtos.get(0);
         WordDto changed = wordDtos.get(1);
 
-        Word foundWord = wordsRepository.findByWordAndMeaning(original.getWord(), original.getMeaning());
+        Word foundWord = wordsRepository.findByWordAndMeaningAndUserId(original.getWord(), original.getMeaning(), original.getUserId());
         foundWord.setWord(changed.getWord());
         foundWord.setMeaning(changed.getMeaning());
         foundWord.setWordType(changed.getWordType());
 
         wordsRepository.save(foundWord);
-        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordTypeAndActive(original.getWordType(), "true"));
+        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordTypeAndActiveAndUserId(
+                original.getWordType(), "true", original.getUserId()));
     }
 
     @Override
     public List<WordDto> deleteWord(WordDto wordDto) {
-        wordsRepository.deleteByWordAndMeaning(wordDto.getWord(), wordDto.getMeaning());
-        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordTypeAndActive(wordDto.getWordType(), "true"));
+        wordsRepository.deleteByWordAndMeaningAndUserId(wordDto.getWord(), wordDto.getMeaning(), wordDto.getUserId());
+        return modelConverter.convertWordsToDtoList(wordsRepository.findAllByWordTypeAndActiveAndUserId(
+                wordDto.getWordType(), "true", wordDto.getUserId()));
     }
 }

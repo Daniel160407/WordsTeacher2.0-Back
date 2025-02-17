@@ -8,7 +8,7 @@ import java.util.List;
 
 @Service
 public interface WordDropperService {
-    List<WordDto> getDroppedWords();
+    List<WordDto> getDroppedWords(Integer userId);
 
     WordListWithAdvancementDto dropWords(List<WordDto> wordDtos);
 }

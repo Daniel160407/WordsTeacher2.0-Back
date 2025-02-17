@@ -8,22 +8,17 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "level")
-public class Level {
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "Users")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Column(name = "level")
-    private Integer level;
-    @Column(name = "user_id")
-    private Integer userId;
-
-    public Level(Integer level, Integer userId) {
-        this.level = level;
-        this.userId = userId;
-    }
+    @Column(name = "email")
+    private String email;
+    @Column(name = "password")
+    private String password;
 }

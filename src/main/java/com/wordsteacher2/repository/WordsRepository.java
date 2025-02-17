@@ -8,12 +8,12 @@ import java.util.List;
 
 public interface WordsRepository extends JpaRepository<Word, Integer> {
     @Transactional
-    void deleteByWordAndMeaning(String word, String meaning);
+    void deleteByWordAndMeaningAndUserId(String word, String meaning, Integer userId);
 
     @Transactional
-    void deleteAllByWordType(String type);
+    void deleteAllByWordTypeAndUserId(String type, Integer userId);
 
-    Word findByWordAndMeaning(String word, String meaning);
+    Word findByWordAndMeaningAndUserId(String word, String meaning, Integer userId);
 
-    List<Word> findAllByWordTypeAndActive(String wordsType, String active);
+    List<Word> findAllByWordTypeAndActiveAndUserId(String wordsType, String active, Integer userId);
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class LevelDto {
-    private Integer level;
-    private Integer userId;
+public class UserDto {
+    private String email;
+    private String password;
 }
