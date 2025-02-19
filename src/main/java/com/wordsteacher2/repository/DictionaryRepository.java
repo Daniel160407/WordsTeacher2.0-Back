@@ -11,16 +11,22 @@ import java.util.List;
 
 @Repository
 public interface DictionaryRepository extends JpaRepository<Dictionary, Integer> {
-    @Query("SELECT d FROM Dictionary d WHERE d.userId = :userId ORDER BY " +
+    @Query("SELECT d FROM Dictionary d WHERE d.userId = :userId AND d.languageId = :languageId ORDER BY " +
             "CASE " +
             "  WHEN LOWER(SUBSTRING(d.word, 1, 3)) IN ('der', 'die', 'das') THEN LOWER(SUBSTRING(d.word, 5)) " +
             "  WHEN LOWER(SUBSTRING(d.word, 1, 4)) = 'sich' THEN LOWER(SUBSTRING(d.word, 6)) " +
             "  ELSE LOWER(d.word) " +
             "END ASC")
-    List<Dictionary> findAllSortedByFirstLetterAndByUserId(@Param("userId") Integer userId);
+    List<Dictionary> findAllSortedByFirstLetterAndByUserIdAndLanguageId(
+            @Param("userId") Integer userId,
+            @Param("languageId") Integer languageId
+    );
 
     @Transactional
-    void deleteByWordAndMeaningAndUserId(String word, String meaning, Integer userId);
+    void deleteByWordAndMeaningAndUserIdAndLanguageId(String word, String meaning, Integer userId, Integer languageId);
 
-    Dictionary findByWordAndMeaningAndUserId(String word, String meaning, Integer userId);
+    @Transactional
+    void deleteAllByUserIdAndLanguageId(Integer userId, Integer languageId);
+
+    Dictionary findByWordAndMeaningAndUserIdAndLanguageId(String word, String meaning, Integer userId, Integer languageId);
 }

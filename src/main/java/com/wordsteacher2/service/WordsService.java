@@ -8,11 +8,11 @@ import java.util.List;
 
 @Service
 public interface WordsService {
-    List<WordDto> getWords(String wordsType, Integer userId);
+    List<WordDto> getWords(String wordsType, Integer userId, Integer languageId);
 
     List<WordDto> addWord(WordDto wordDto);
 
-    Level getLevel(Integer userId);
+    Level getLevel(Integer userId,Integer languageId);
 
     List<WordDto> changeWord(List<WordDto> wordDtos);
     List<WordDto> deleteWord(WordDto wordDto);

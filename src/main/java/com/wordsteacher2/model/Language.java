@@ -8,25 +8,22 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "level")
-public class Level {
+@Table(name = "languages")
+public class Language {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Column(name = "level")
-    private Integer level;
+    @Column(name = "language")
+    private String language;
     @Column(name = "user_id")
     private Integer userId;
-    @Column(name = "language_id")
-    private Integer languageId;
 
-    public Level(Integer level, Integer userId, Integer languageId) {
-        this.level = level;
+    public Language(String language, Integer userId) {
+        this.language = language;
         this.userId = userId;
-        this.languageId = languageId;
     }
 }

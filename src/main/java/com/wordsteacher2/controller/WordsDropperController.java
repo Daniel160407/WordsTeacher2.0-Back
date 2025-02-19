@@ -21,8 +21,8 @@ public class WordsDropperController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getDroppedWords(@RequestParam Integer userid) {
-        return ResponseEntity.ok().body(wordDropperService.getDroppedWords(userid));
+    public ResponseEntity<?> getDroppedWords(@RequestParam Integer userid, @RequestParam Integer languageid) {
+        return ResponseEntity.ok().body(wordDropperService.getDroppedWords(userid, languageid));
     }
 
     @PutMapping

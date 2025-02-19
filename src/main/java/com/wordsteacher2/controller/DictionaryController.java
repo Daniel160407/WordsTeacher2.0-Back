@@ -22,8 +22,8 @@ public class DictionaryController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getWords(@RequestParam String type, @RequestParam Integer userid) {
-        return ResponseEntity.ok().body(dictionaryService.getWords(type, userid));
+    public ResponseEntity<?> getWords(@RequestParam String type, @RequestParam Integer userid, @RequestParam Integer languageid) {
+        return ResponseEntity.ok().body(dictionaryService.getWords(type, userid, languageid));
     }
 
     @PostMapping
@@ -37,7 +37,7 @@ public class DictionaryController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteWord(@RequestParam String word, @RequestParam String meaning, @RequestParam Integer userid) {
-        return ResponseEntity.ok().body(dictionaryService.deleteWord(new DictionaryDto(word, meaning, userid)));
+    public ResponseEntity<?> deleteWord(@RequestParam String word, @RequestParam String meaning, @RequestParam Integer userid, @RequestParam Integer languageid) {
+        return ResponseEntity.ok().body(dictionaryService.deleteWord(new DictionaryDto(word, meaning, userid, languageid)));
     }
 }

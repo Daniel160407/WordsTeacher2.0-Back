@@ -11,25 +11,29 @@ public class WordDto {
     private String wordType;
     private String active;
     private Integer userId;
+    private Integer languageId;
 
-    public WordDto(String word, String meaning, String wordType, String active, Integer userId) {
+    public WordDto(String word, String meaning, String wordType, String active, Integer userId, Integer languageId) {
         this.word = word;
         this.meaning = meaning;
         this.wordType = wordType;
         this.active = active;
         this.userId = userId;
+        this.languageId = languageId;
     }
 
-    public WordDto(String word, String meaning, String wordType, Integer userId) {
+    public WordDto(String word, String meaning, String wordType, Integer userId, Integer languageId) {
         this.word = word;
         this.meaning = meaning;
         this.wordType = wordType;
         this.userId = userId;
+        this.languageId = languageId;
     }
 
-    public WordDto(String word, String meaning, Integer userId) {
+    public WordDto(String word, String meaning, Integer userId, Integer languageId) {
         this.word = word;
         this.meaning = meaning;
         this.userId = userId;
+        this.languageId = languageId;
     }
 }

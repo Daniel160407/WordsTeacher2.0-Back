@@ -36,35 +36,36 @@ public class WordDropperServiceImpl implements WordDropperService {
     }
 
     @Override
-    public List<WordDto> getDroppedWords(Integer userId) {
+    public List<WordDto> getDroppedWords(Integer userId, Integer languageId) {
         return modelConverter.convertWordsToDtoList(
-                wordsRepository.findAllByWordTypeAndActiveAndUserId("word", "false", userId));
+                wordsRepository.findAllByWordTypeAndActiveAndUserIdAndLanguageId("word", "false", userId, languageId));
     }
 
     @Override
     public WordListWithAdvancementDto dropWords(List<WordDto> wordDtos) {
         Integer userId = wordDtos.get(0).getUserId();
+        Integer languageId = wordDtos.get(0).getLanguageId();
         for (WordDto wordDto : wordDtos) {
-            Word word = wordsRepository.findByWordAndMeaningAndUserId(wordDto.getWord(), wordDto.getMeaning(), userId);
+            Word word = wordsRepository.findByWordAndMeaningAndUserIdAndLanguageId(wordDto.getWord(), wordDto.getMeaning(), userId, languageId);
             word.setActive("false");
             wordsRepository.save(word);
         }
 
-        if (wordsRepository.findAllByWordTypeAndActiveAndUserId("word", "true", userId).isEmpty()) {
-            List<Word> droppedWords = wordsRepository.findAllByWordTypeAndActiveAndUserId("word", "false", userId);
+        if (wordsRepository.findAllByWordTypeAndActiveAndUserIdAndLanguageId("word", "true", userId, languageId).isEmpty()) {
+            List<Word> droppedWords = wordsRepository.findAllByWordTypeAndActiveAndUserIdAndLanguageId("word", "false", userId, languageId);
             for (Word droppedWord : droppedWords) {
                 droppedWord.setActive("true");
                 wordsRepository.save(droppedWord);
             }
 
-            Level level = levelRepository.findByUserId(userId);
+            Level level = levelRepository.findByUserIdAndLanguageId(userId, languageId);
             assert level != null;
 
             if (level.getLevel() >= 5) {
                 level.setLevel(1);
-                wordsRepository.deleteAllByWordTypeAndUserId("word",userId);
+                wordsRepository.deleteAllByWordTypeAndUserIdAndLanguageId("word", userId, languageId);
 
-                Statistic statistic = statisticsRepository.findByUserId(userId);
+                Statistic statistic = statisticsRepository.findByUserIdAndLanguageId(userId, languageId);
                 statistic.setCycles(statistic.getCycles() + 1);
                 statisticsRepository.save(statistic);
                 this.advancement = statisticsService.getCyclesAdvancement();
@@ -73,8 +74,8 @@ public class WordDropperServiceImpl implements WordDropperService {
             }
 
             levelRepository.save(level);
-        } else if (wordsRepository.findAllByWordTypeAndActiveAndUserId("difficult", "true", userId).isEmpty()) {
-            List<Word> droppedWords = wordsRepository.findAllByWordTypeAndActiveAndUserId("difficult", "false", userId);
+        } else if (wordsRepository.findAllByWordTypeAndActiveAndUserIdAndLanguageId("difficult", "true", userId, languageId).isEmpty()) {
+            List<Word> droppedWords = wordsRepository.findAllByWordTypeAndActiveAndUserIdAndLanguageId("difficult", "false", userId, languageId);
             for (Word droppedWord : droppedWords) {
                 droppedWord.setActive("true");
                 wordsRepository.save(droppedWord);
@@ -82,9 +83,9 @@ public class WordDropperServiceImpl implements WordDropperService {
         }
 
         if (!wordDtos.isEmpty() && "difficult".equals(wordDtos.get(0).getWordType())) {
-            return modelConverter.convert(wordsRepository.findAllByWordTypeAndActiveAndUserId("difficult", "true", userId),
+            return modelConverter.convert(wordsRepository.findAllByWordTypeAndActiveAndUserIdAndLanguageId("difficult", "true", userId, languageId),
                     advancement != null ? advancement.getDescription() : null);
         }
-        return modelConverter.convert(wordsRepository.findAllByWordTypeAndActiveAndUserId("word", "true", userId), advancement != null ? advancement.getDescription() : null);
+        return modelConverter.convert(wordsRepository.findAllByWordTypeAndActiveAndUserIdAndLanguageId("word", "true", userId, languageId), advancement != null ? advancement.getDescription() : null);
     }
 }

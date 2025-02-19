@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DictionaryDto {
-    private String word;
-    private String meaning;
+public class LanguageDto {
+    private String language;
     private Integer userId;
-    private Integer LanguageId;
 }

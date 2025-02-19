@@ -25,11 +25,14 @@ public class Statistic {
     private Integer dayStreak;
     @Column(name = "user_id")
     private Integer userId;
+    @Column(name = "language_id")
+    private Integer languageId;
 
-    public Statistic(Integer wordsLearned, Integer cycles, Integer dayStreak, Integer userId) {
+    public Statistic(Integer wordsLearned, Integer cycles, Integer dayStreak, Integer userId, Integer languageId) {
         this.wordsLearned = wordsLearned;
         this.cycles = cycles;
         this.dayStreak = dayStreak;
         this.userId = userId;
+        this.languageId = languageId;
     }
 }

@@ -23,10 +23,13 @@ public class Dictionary {
     private String meaning;
     @Column(name = "user_id")
     private Integer userId;
+    @Column(name = "language_id")
+    private Integer languageId;
 
-    public Dictionary(String word, String meaning, Integer userId) {
+    public Dictionary(String word, String meaning, Integer userId, Integer languageId) {
         this.word = word;
         this.meaning = meaning;
         this.userId = userId;
+        this.languageId = languageId;
     }
 }

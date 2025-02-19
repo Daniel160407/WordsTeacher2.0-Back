@@ -40,8 +40,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> register(@RequestBody UserDto userDto) {
         try {
-            userService.register(userDto);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(userDto));
         } catch (UserAlreadyRegisteredException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

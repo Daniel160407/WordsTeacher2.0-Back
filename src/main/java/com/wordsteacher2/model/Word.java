@@ -27,13 +27,15 @@ public class Word {
     private String active;
     @Column(name = "user_id")
     private Integer userId;
+    @Column(name = "language_id")
+    private Integer languageId;
 
-
-    public Word(String word, String meaning, String wordType, String active, Integer userId) {
+    public Word(String word, String meaning, String wordType, String active, Integer userId, Integer languageId) {
         this.word = word;
         this.meaning = meaning;
         this.wordType = wordType;
         this.active = active;
         this.userId = userId;
+        this.languageId = languageId;
     }
 }

@@ -33,8 +33,8 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     @Override
-    public List<DictionaryDto> getWords(String type, Integer userId) {
-        List<Dictionary> words = dictionaryRepository.findAllSortedByFirstLetterAndByUserId(userId);
+    public List<DictionaryDto> getWords(String type, Integer userId, Integer languageId) {
+        List<Dictionary> words = dictionaryRepository.findAllSortedByFirstLetterAndByUserIdAndLanguageId(userId, languageId);
 
         if ("word".equals(type)) {
             Iterator<Dictionary> iterator = words.iterator();
@@ -54,31 +54,31 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public DictionaryListWithAdvancementDto addWord(DictionaryDto dictionaryDto) {
-        Dictionary existedWord = dictionaryRepository.findByWordAndMeaningAndUserId(dictionaryDto.getWord(), dictionaryDto.getMeaning(), dictionaryDto.getUserId());
+        Dictionary existedWord = dictionaryRepository.findByWordAndMeaningAndUserIdAndLanguageId(dictionaryDto.getWord(), dictionaryDto.getMeaning(), dictionaryDto.getUserId(), dictionaryDto.getLanguageId());
         if (existedWord == null) {
             dictionaryRepository.save(modelConverter.convert(dictionaryDto));
         }
 
-        Statistic statistic = statisticsRepository.findByUserId(dictionaryDto.getUserId());
+        Statistic statistic = statisticsRepository.findByUserIdAndLanguageId(dictionaryDto.getUserId(), dictionaryDto.getLanguageId());
         assert statistic != null;
         statistic.setWordsLearned(statistic.getWordsLearned() + 1);
         statisticsRepository.save(statistic);
         this.advancement = statisticsService.getLearnedWordsAdvancement();
 
 
-        return modelConverter.convertDict(dictionaryRepository.findAllSortedByFirstLetterAndByUserId(dictionaryDto.getUserId()), advancement != null ? advancement.getDescription() : null);
+        return modelConverter.convertDict(dictionaryRepository.findAllSortedByFirstLetterAndByUserIdAndLanguageId(dictionaryDto.getUserId(), dictionaryDto.getLanguageId()), advancement != null ? advancement.getDescription() : null);
     }
 
     @Override
     public List<DictionaryDto> deleteWord(DictionaryDto dictionaryDto) {
-        dictionaryRepository.deleteByWordAndMeaningAndUserId(dictionaryDto.getWord(), dictionaryDto.getMeaning(), dictionaryDto.getUserId());
+        dictionaryRepository.deleteByWordAndMeaningAndUserIdAndLanguageId(dictionaryDto.getWord(), dictionaryDto.getMeaning(), dictionaryDto.getUserId(), dictionaryDto.getLanguageId());
 
-        Statistic statistic = statisticsRepository.findByUserId(dictionaryDto.getUserId());
+        Statistic statistic = statisticsRepository.findByUserIdAndLanguageId(dictionaryDto.getUserId(), dictionaryDto.getLanguageId());
         assert statistic != null;
         statistic.setWordsLearned(statistic.getWordsLearned() - 1);
         statisticsRepository.save(statistic);
 
-        return modelConverter.convertDictionaryToDtoList(dictionaryRepository.findAllSortedByFirstLetterAndByUserId(dictionaryDto.getUserId()));
+        return modelConverter.convertDictionaryToDtoList(dictionaryRepository.findAllSortedByFirstLetterAndByUserIdAndLanguageId(dictionaryDto.getUserId(), dictionaryDto.getLanguageId()));
     }
 
     @Override
@@ -86,12 +86,13 @@ public class DictionaryServiceImpl implements DictionaryService {
         DictionaryDto original = dictionaryDtos.get(0);
         DictionaryDto changed = dictionaryDtos.get(1);
         Integer userId = original.getUserId();
+        Integer languageId = original.getLanguageId();
 
-        Dictionary dictionary = dictionaryRepository.findByWordAndMeaningAndUserId(original.getWord(), original.getMeaning(), userId);
+        Dictionary dictionary = dictionaryRepository.findByWordAndMeaningAndUserIdAndLanguageId(original.getWord(), original.getMeaning(), userId, languageId);
         dictionary.setWord(changed.getWord());
         dictionary.setMeaning(changed.getMeaning());
 
         dictionaryRepository.save(dictionary);
-        return modelConverter.convertDictionaryToDtoList(dictionaryRepository.findAllSortedByFirstLetterAndByUserId(userId));
+        return modelConverter.convertDictionaryToDtoList(dictionaryRepository.findAllSortedByFirstLetterAndByUserIdAndLanguageId(userId, languageId));
     }
 }
