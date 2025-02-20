@@ -2,40 +2,41 @@ package com.wordsteacher2.service;
 
 import com.wordsteacher2.dto.DictionaryDto;
 import com.wordsteacher2.dto.DictionaryListWithAdvancementDto;
+import com.wordsteacher2.freemius.service.exception.NoPermissionException;
 import com.wordsteacher2.model.Dictionary;
 import com.wordsteacher2.model.Statistic;
+import com.wordsteacher2.model.User;
 import com.wordsteacher2.repository.DictionaryRepository;
 import com.wordsteacher2.repository.StatisticsRepository;
+import com.wordsteacher2.repository.UsersRepository;
 import com.wordsteacher2.service.advancement.Advancement;
 import com.wordsteacher2.util.ModelConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class DictionaryServiceImpl implements DictionaryService {
     private final DictionaryRepository dictionaryRepository;
     private final StatisticsRepository statisticsRepository;
+    private final UsersRepository usersRepository;
     private final ModelConverter modelConverter;
     private final StatisticsService statisticsService;
     private Advancement advancement;
 
     @Autowired
-    public DictionaryServiceImpl(DictionaryRepository dictionaryRepository, StatisticsRepository statisticsRepository, ModelConverter modelConverter, StatisticsService statisticsService) {
+    public DictionaryServiceImpl(DictionaryRepository dictionaryRepository, StatisticsRepository statisticsRepository, UsersRepository usersRepository, ModelConverter modelConverter, StatisticsService statisticsService) {
         this.dictionaryRepository = dictionaryRepository;
         this.statisticsRepository = statisticsRepository;
+        this.usersRepository = usersRepository;
         this.modelConverter = modelConverter;
         this.statisticsService = statisticsService;
     }
 
     @Override
-    public List<DictionaryDto> getWords(String type, Integer userId, Integer languageId) {
+    public List<DictionaryDto> getWords(String type, Integer userId, Integer languageId, Boolean tests) {
         List<Dictionary> words = dictionaryRepository.findAllSortedByFirstLetterAndByUserIdAndLanguageId(userId, languageId);
-
         if ("word".equals(type)) {
             Iterator<Dictionary> iterator = words.iterator();
 
@@ -46,6 +47,15 @@ public class DictionaryServiceImpl implements DictionaryService {
                 if (word.trim().split("\\s+").length > 1 && Arrays.stream(new String[]{"Der", "Die", "Das", "Sich"}).noneMatch(word::startsWith)) {
                     iterator.remove();
                 }
+            }
+        }
+
+        if (tests) {
+            Optional<User> userOptional = usersRepository.findById(userId);
+            if (userOptional.isPresent() && !userOptional.get().getPlan().equals("Free")) {
+                return modelConverter.convertDictionaryToDtoList(words);
+            } else {
+                throw new NoPermissionException();
             }
         }
         return modelConverter.convertDictionaryToDtoList(words);

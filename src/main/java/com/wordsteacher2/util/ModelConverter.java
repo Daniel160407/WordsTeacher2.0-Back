@@ -66,6 +66,7 @@ public class ModelConverter {
         return User.builder()
                 .email(userDto.getEmail())
                 .password(userDto.getPassword())
+                .plan(userDto.getPlan())
                 .build();
     }
 

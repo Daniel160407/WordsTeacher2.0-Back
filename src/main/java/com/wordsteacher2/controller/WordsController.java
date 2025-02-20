@@ -1,6 +1,7 @@
 package com.wordsteacher2.controller;
 
 import com.wordsteacher2.dto.WordDto;
+import com.wordsteacher2.freemius.service.exception.NoPermissionException;
 import com.wordsteacher2.service.WordsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -23,8 +24,16 @@ public class WordsController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getWords(@RequestParam String wordstype, @RequestParam Integer userid, @RequestParam Integer languageid) {
-        return ResponseEntity.ok().body(wordsService.getWords(wordstype, userid, languageid));
+    public ResponseEntity<?> getWords(@RequestParam String wordstype,
+                                      @RequestParam Integer userid,
+                                      @RequestParam Integer languageid,
+                                      @RequestParam Boolean tests) {
+        try {
+            return ResponseEntity.ok().body(wordsService.getWords(wordstype, userid, languageid, tests));
+        } catch (NoPermissionException e) {
+            System.err.println("Words");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @GetMapping("/level")

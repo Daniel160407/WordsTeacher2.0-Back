@@ -1,6 +1,7 @@
 package com.wordsteacher2.controller;
 
 import com.wordsteacher2.dto.DictionaryDto;
+import com.wordsteacher2.freemius.service.exception.NoPermissionException;
 import com.wordsteacher2.service.DictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,16 @@ public class DictionaryController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getWords(@RequestParam String type, @RequestParam Integer userid, @RequestParam Integer languageid) {
-        return ResponseEntity.ok().body(dictionaryService.getWords(type, userid, languageid));
+    public ResponseEntity<?> getWords(@RequestParam String type,
+                                      @RequestParam Integer userid,
+                                      @RequestParam Integer languageid,
+                                      @RequestParam Boolean tests) {
+        try {
+            return ResponseEntity.ok().body(dictionaryService.getWords(type, userid, languageid, tests));
+        } catch (NoPermissionException e) {
+            System.err.println("Dictionary");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @PostMapping

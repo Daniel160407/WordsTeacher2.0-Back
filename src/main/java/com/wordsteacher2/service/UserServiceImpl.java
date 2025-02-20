@@ -49,6 +49,7 @@ public class UserServiceImpl implements UserService {
     public Integer register(UserDto userDto) {
         if (usersRepository.findByEmail(userDto.getEmail()) == null) {
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            userDto.setPlan("free");
             usersRepository.save(modelConverter.convert(userDto));
 
             Integer userId = usersRepository.findByEmail(userDto.getEmail()).getId();

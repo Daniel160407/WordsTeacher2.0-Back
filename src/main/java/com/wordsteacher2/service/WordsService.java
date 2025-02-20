@@ -8,7 +8,7 @@ import java.util.List;
 
 @Service
 public interface WordsService {
-    List<WordDto> getWords(String wordsType, Integer userId, Integer languageId);
+    List<WordDto> getWords(String wordsType, Integer userId, Integer languageId, Boolean tests);
 
     List<WordDto> addWord(WordDto wordDto);
 

@@ -9,4 +9,15 @@ public class UserDto {
     private String email;
     private String password;
     private String language;
+    private String plan;
+
+    @Override
+    public String toString() {
+        return "UserDto{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", language='" + language + '\'' +
+                ", plan='" + plan + '\'' +
+                '}';
+    }
 }
