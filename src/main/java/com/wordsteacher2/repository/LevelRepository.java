@@ -9,7 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface LevelRepository extends JpaRepository<Level, Integer> {
-    Level findByUserIdAndLanguageId(Integer userId,Integer LanguageId);
+    Level findByUserIdAndLanguageId(Integer userId, Integer LanguageId);
+
+    Level findByUserId(Integer userId);
+
     @Transactional
     void deleteByUserIdAndLanguageId(Integer userId, Integer languageId);
 }

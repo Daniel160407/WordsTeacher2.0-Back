@@ -29,7 +29,6 @@ public class WordsDropperController {
         try {
             return ResponseEntity.ok().body(wordDropperService.getDroppedWords(userid, languageid, tests));
         } catch (NoPermissionException e) {
-            System.err.println("Dropper");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }

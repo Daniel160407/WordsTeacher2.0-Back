@@ -52,7 +52,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 
         if (tests) {
             Optional<User> userOptional = usersRepository.findById(userId);
-            if (userOptional.isPresent() && !userOptional.get().getPlan().equals("Free")) {
+            if (userOptional.isPresent() && !userOptional.get().getPlan().equals("free")) {
                 return modelConverter.convertDictionaryToDtoList(words);
             } else {
                 throw new NoPermissionException();

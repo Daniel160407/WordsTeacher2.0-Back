@@ -30,7 +30,6 @@ public class DictionaryController {
         try {
             return ResponseEntity.ok().body(dictionaryService.getWords(type, userid, languageid, tests));
         } catch (NoPermissionException e) {
-            System.err.println("Dictionary");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }

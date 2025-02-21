@@ -34,7 +34,7 @@ public class WordsServiceImpl implements WordsService {
     public List<WordDto> getWords(String wordsType, Integer userId, Integer languageId, Boolean tests) {
         if (tests) {
             Optional<User> userOptional = usersRepository.findById(userId);
-            if (userOptional.isPresent() && !userOptional.get().getPlan().equals("Free")) {
+            if (userOptional.isPresent() && !userOptional.get().getPlan().equals("free")) {
                 return modelConverter.convertWordsToDtoList(
                         wordsRepository.findAllByWordTypeAndActiveAndUserIdAndLanguageId(wordsType, "true", userId, languageId));
             } else {

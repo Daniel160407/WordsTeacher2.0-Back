@@ -1,6 +1,7 @@
 package com.wordsteacher2.controller;
 
 import com.wordsteacher2.dto.UserDto;
+import com.wordsteacher2.freemius.model.PlanWithLanguageId;
 import com.wordsteacher2.service.UserService;
 import com.wordsteacher2.service.exception.InvalidEmailOrPasswordException;
 import com.wordsteacher2.service.exception.UserAlreadyRegisteredException;
@@ -28,10 +29,10 @@ public class UserController {
     @PutMapping
     public ResponseEntity<?> login(@RequestBody UserDto userDto, HttpServletResponse response) {
         try {
-            Integer userId = userService.logIn(userDto);
+            PlanWithLanguageId plan = userService.logIn(userDto);
             val token = jwtUtils.generateToken(userDto.getEmail());
             response.addHeader(jwtUtils.JWT_HEADER, jwtUtils.JWT_PREFIX + token);
-            return ResponseEntity.accepted().body(userId);
+            return ResponseEntity.accepted().body(plan);
         } catch (InvalidEmailOrPasswordException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

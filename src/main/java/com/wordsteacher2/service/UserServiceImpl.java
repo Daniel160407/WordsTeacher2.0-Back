@@ -1,6 +1,7 @@
 package com.wordsteacher2.service;
 
 import com.wordsteacher2.dto.UserDto;
+import com.wordsteacher2.freemius.model.PlanWithLanguageId;
 import com.wordsteacher2.model.Language;
 import com.wordsteacher2.model.Level;
 import com.wordsteacher2.model.Statistic;
@@ -36,12 +37,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Integer logIn(UserDto userDto) {
+    public PlanWithLanguageId logIn(UserDto userDto) {
         User user = usersRepository.findByEmail(userDto.getEmail());
         if (user == null || !passwordEncoder.matches(userDto.getPassword(), user.getPassword())) {
             throw new InvalidEmailOrPasswordException();
         } else {
-            return user.getId();
+            return new PlanWithLanguageId(user.getId(), user.getPlan(), languagesRepository.findFirstByUserId(user.getId()).getId());
         }
     }
 
@@ -54,14 +55,14 @@ public class UserServiceImpl implements UserService {
 
             Integer userId = usersRepository.findByEmail(userDto.getEmail()).getId();
             languagesRepository.save(new Language(userDto.getLanguage(), userId));
-            Integer languageId = languagesRepository.findByUserId(userId).getId();
+            Integer languageId = languagesRepository.findFirstByUserId(userId).getId();
             Level level = new Level(1, userId, languageId);
             levelRepository.save(level);
 
             Statistic statistic = new Statistic(0, 0, 0, userId, languageId);
             statisticsRepository.save(statistic);
 
-            return languagesRepository.findByUserId(userId).getId();
+            return languagesRepository.findFirstByUserId(userId).getId();
         } else {
             throw new UserAlreadyRegisteredException();
         }

@@ -31,7 +31,6 @@ public class WordsController {
         try {
             return ResponseEntity.ok().body(wordsService.getWords(wordstype, userid, languageid, tests));
         } catch (NoPermissionException e) {
-            System.err.println("Words");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
@@ -56,8 +55,8 @@ public class WordsController {
                                         @RequestParam String meaning,
                                         @RequestParam String wordtype,
                                         @RequestParam Integer userid,
-                                        @RequestParam Integer languageId) {
-        return ResponseEntity.ok().body(wordsService.deleteWord(new WordDto(word, meaning, wordtype, userid, languageId)));
+                                        @RequestParam Integer languageid) {
+        return ResponseEntity.ok().body(wordsService.deleteWord(new WordDto(word, meaning, wordtype, userid, languageid)));
     }
 
     @RequestMapping(method = RequestMethod.OPTIONS)
