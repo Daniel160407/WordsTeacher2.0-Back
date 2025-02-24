@@ -27,9 +27,8 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Advancement getLearnedWordsAdvancement() {
-        Statistic statistic = statisticsRepository.findById(1)
-                .orElseThrow(() -> new IllegalStateException("Statistic not found"));
+    public Advancement getLearnedWordsAdvancement(Integer userId, Integer languageId) {
+        Statistic statistic = statisticsRepository.findByUserIdAndLanguageId(userId, languageId);
 
         int wordsLearned = statistic.getWordsLearned();
 
@@ -51,11 +50,9 @@ public class StatisticsServiceImpl implements StatisticsService {
         }
     }
 
-
     @Override
-    public Advancement getCyclesAdvancement() {
-        Statistic statistic = statisticsRepository.findById(1)
-                .orElseThrow(() -> new IllegalStateException("Statistic not found"));
+    public Advancement getCyclesAdvancement(Integer userId, Integer languageId) {
+        Statistic statistic = statisticsRepository.findByUserIdAndLanguageId(userId, languageId);
 
         int cycles = statistic.getCycles();
 
@@ -77,9 +74,8 @@ public class StatisticsServiceImpl implements StatisticsService {
 
 
     @Override
-    public Advancement getDayStreakAdvancement() {
-        Statistic statistic = statisticsRepository.findById(1)
-                .orElseThrow(() -> new IllegalStateException("Statistic not found"));
+    public Advancement getDayStreakAdvancement(Integer userId, Integer languageId) {
+        Statistic statistic = statisticsRepository.findByUserIdAndLanguageId(userId, languageId);
 
         int dayStreak = statistic.getDayStreak();
 

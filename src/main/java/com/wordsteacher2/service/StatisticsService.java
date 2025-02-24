@@ -6,7 +6,10 @@ import org.springframework.stereotype.Service;
 @Service
 public interface StatisticsService {
     Advancement checkStatistics();
-    Advancement getLearnedWordsAdvancement();
-    Advancement getCyclesAdvancement();
-    Advancement getDayStreakAdvancement();
+
+    Advancement getLearnedWordsAdvancement(Integer userId, Integer languageId);
+
+    Advancement getCyclesAdvancement(Integer userId, Integer languageId);
+
+    Advancement getDayStreakAdvancement(Integer userId, Integer languageId);
 }

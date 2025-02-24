@@ -83,7 +83,7 @@ public class WordDropperServiceImpl implements WordDropperService {
                 Statistic statistic = statisticsRepository.findByUserIdAndLanguageId(userId, languageId);
                 statistic.setCycles(statistic.getCycles() + 1);
                 statisticsRepository.save(statistic);
-                this.advancement = statisticsService.getCyclesAdvancement();
+                this.advancement = statisticsService.getCyclesAdvancement(userId, languageId);
             } else {
                 level.setLevel(level.getLevel() + 1);
             }

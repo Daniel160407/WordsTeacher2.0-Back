@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/", "/*.html", "/assets/*.css", "/assets/*.js",  "/images/*.png", "/sounds/*.mp3", "/svg/*.svg").permitAll()
                         .requestMatchers("/login").permitAll()
+                        .requestMatchers("/documentation").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

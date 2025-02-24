@@ -73,7 +73,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         assert statistic != null;
         statistic.setWordsLearned(statistic.getWordsLearned() + 1);
         statisticsRepository.save(statistic);
-        this.advancement = statisticsService.getLearnedWordsAdvancement();
+        this.advancement = statisticsService.getLearnedWordsAdvancement(dictionaryDto.getUserId(), dictionaryDto.getLanguageId());
 
 
         return modelConverter.convertDict(dictionaryRepository.findAllSortedByFirstLetterAndByUserIdAndLanguageId(dictionaryDto.getUserId(), dictionaryDto.getLanguageId()), advancement != null ? advancement.getDescription() : null);
