@@ -2,6 +2,7 @@ package com.wordsteacher2.controller;
 
 import com.wordsteacher2.dto.UserDto;
 import com.wordsteacher2.freemius.model.PlanWithLanguageId;
+import com.wordsteacher2.freemius.service.exception.NoPermissionException;
 import com.wordsteacher2.service.UserService;
 import com.wordsteacher2.service.exception.InvalidEmailOrPasswordException;
 import com.wordsteacher2.service.exception.UserAlreadyRegisteredException;
@@ -44,6 +45,16 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(userDto));
         } catch (UserAlreadyRegisteredException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteAccount(@RequestParam Integer userid) {
+        try {
+            userService.deleteAccount(userid);
+            return ResponseEntity.ok().build();
+        } catch (NoPermissionException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 }

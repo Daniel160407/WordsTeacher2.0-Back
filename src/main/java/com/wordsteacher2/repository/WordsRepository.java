@@ -16,6 +16,9 @@ public interface WordsRepository extends JpaRepository<Word, Integer> {
     @Transactional
     void deleteAllByUserIdAndLanguageId(Integer userId, Integer languageId);
 
+    @Transactional
+    void deleteAllByUserId(Integer userId);
+
     Word findByWordAndMeaningAndUserIdAndLanguageId(String word, String meaning, Integer userId, Integer languageId);
 
     List<Word> findAllByWordTypeAndActiveAndUserIdAndLanguageId(String wordsType, String active, Integer userId, Integer languageId);

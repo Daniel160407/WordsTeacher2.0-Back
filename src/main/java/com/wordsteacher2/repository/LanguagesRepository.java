@@ -17,4 +17,7 @@ public interface LanguagesRepository extends JpaRepository<Language, Integer> {
 
     @Transactional
     List<Language> deleteByLanguageAndUserId(String language, Integer userId);
+
+    @Transactional
+    void deleteAllByUserId(Integer userId);
 }

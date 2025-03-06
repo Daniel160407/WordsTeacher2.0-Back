@@ -10,6 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface StatisticsRepository extends JpaRepository<Statistic, Integer> {
     Statistic findByUserIdAndLanguageId(Integer userId, Integer languageId);
+
     @Transactional
     void deleteByUserIdAndLanguageId(Integer userId, Integer languageId);
+
+    @Transactional
+    void deleteAllByUserId(Integer userId);
 }

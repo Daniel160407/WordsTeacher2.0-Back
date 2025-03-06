@@ -2,14 +2,12 @@ package com.wordsteacher2.service;
 
 import com.wordsteacher2.dto.UserDto;
 import com.wordsteacher2.freemius.model.PlanWithLanguageId;
+import com.wordsteacher2.freemius.service.exception.NoPermissionException;
 import com.wordsteacher2.model.Language;
 import com.wordsteacher2.model.Level;
 import com.wordsteacher2.model.Statistic;
 import com.wordsteacher2.model.User;
-import com.wordsteacher2.repository.LanguagesRepository;
-import com.wordsteacher2.repository.LevelRepository;
-import com.wordsteacher2.repository.StatisticsRepository;
-import com.wordsteacher2.repository.UsersRepository;
+import com.wordsteacher2.repository.*;
 import com.wordsteacher2.service.exception.InvalidEmailOrPasswordException;
 import com.wordsteacher2.service.exception.UserAlreadyRegisteredException;
 import com.wordsteacher2.util.ModelConverter;
@@ -23,15 +21,19 @@ public class UserServiceImpl implements UserService {
     private final LevelRepository levelRepository;
     private final StatisticsRepository statisticsRepository;
     private final LanguagesRepository languagesRepository;
+    private final WordsRepository wordsRepository;
+    private final DictionaryRepository dictionaryRepository;
     private final ModelConverter modelConverter;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UsersRepository usersRepository, LevelRepository levelRepository, StatisticsRepository statisticsRepository, LanguagesRepository languagesRepository, ModelConverter modelConverter, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UsersRepository usersRepository, LevelRepository levelRepository, StatisticsRepository statisticsRepository, LanguagesRepository languagesRepository, WordsRepository wordsRepository, DictionaryRepository dictionaryRepository, ModelConverter modelConverter, BCryptPasswordEncoder passwordEncoder) {
         this.usersRepository = usersRepository;
         this.levelRepository = levelRepository;
         this.statisticsRepository = statisticsRepository;
         this.languagesRepository = languagesRepository;
+        this.wordsRepository = wordsRepository;
+        this.dictionaryRepository = dictionaryRepository;
         this.modelConverter = modelConverter;
         this.passwordEncoder = passwordEncoder;
     }
@@ -65,6 +67,20 @@ public class UserServiceImpl implements UserService {
             return languagesRepository.findFirstByUserId(userId).getId();
         } else {
             throw new UserAlreadyRegisteredException();
+        }
+    }
+
+    @Override
+    public void deleteAccount(Integer userId) {
+        if (usersRepository.findById(userId).isPresent()) {
+            usersRepository.deleteById(userId);
+            wordsRepository.deleteAllByUserId(userId);
+            dictionaryRepository.deleteAllByUserId(userId);
+            levelRepository.deleteAllByUserId(userId);
+            statisticsRepository.deleteAllByUserId(userId);
+            languagesRepository.deleteAllByUserId(userId);
+        } else {
+            throw new NoPermissionException();
         }
     }
 }

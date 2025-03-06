@@ -28,5 +28,8 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, Integer>
     @Transactional
     void deleteAllByUserIdAndLanguageId(Integer userId, Integer languageId);
 
+    @Transactional
+    void deleteAllByUserId(Integer userId);
+
     Dictionary findByWordAndMeaningAndUserIdAndLanguageId(String word, String meaning, Integer userId, Integer languageId);
 }

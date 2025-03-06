@@ -15,4 +15,7 @@ public interface LevelRepository extends JpaRepository<Level, Integer> {
 
     @Transactional
     void deleteByUserIdAndLanguageId(Integer userId, Integer languageId);
+
+    @Transactional
+    void deleteAllByUserId(Integer userId);
 }

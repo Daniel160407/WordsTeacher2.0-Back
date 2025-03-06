@@ -9,4 +9,6 @@ public interface UserService {
     PlanWithLanguageId logIn(UserDto userDto);
 
     Integer register(UserDto userDto);
+
+    void deleteAccount(Integer userId);
 }
