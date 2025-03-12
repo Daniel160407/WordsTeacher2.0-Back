@@ -5,11 +5,13 @@ import lombok.*;
 @Data
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class WordDto {
     private String word;
     private String meaning;
     private String wordType;
     private String active;
+    private String level;
     private Integer userId;
     private Integer languageId;
 

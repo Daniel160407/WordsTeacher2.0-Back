@@ -25,6 +25,8 @@ public class Word {
     private String wordType;
     @Column(name = "active")
     private String active;
+    @Column(name = "level")
+    private String level;
     @Column(name = "user_id")
     private Integer userId;
     @Column(name = "language_id")

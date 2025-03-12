@@ -21,6 +21,8 @@ public class Dictionary {
     private String word;
     @Column(name = "meaning")
     private String meaning;
+    @Column(name = "level")
+    private String level;
     @Column(name = "user_id")
     private Integer userId;
     @Column(name = "language_id")
