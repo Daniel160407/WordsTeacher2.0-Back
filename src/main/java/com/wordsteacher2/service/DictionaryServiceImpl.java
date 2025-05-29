@@ -26,7 +26,6 @@ public class DictionaryServiceImpl implements DictionaryService {
     private final UsersRepository usersRepository;
     private final ModelConverter modelConverter;
     private final StatisticsService statisticsService;
-    private Advancement advancement;
 
     @Autowired
     public DictionaryServiceImpl(DictionaryRepository dictionaryRepository, StatisticsRepository statisticsRepository, UsersRepository usersRepository, ModelConverter modelConverter, StatisticsService statisticsService) {
@@ -63,26 +62,22 @@ public class DictionaryServiceImpl implements DictionaryService {
             }
         }
 
-        return modelConverter.convertDict(
-                words, updateDayStreakDate(userId, languageId) != null ?
-                        updateDayStreakDate(userId, languageId).getDescription() : "");
+        Advancement advancement = updateDayStreakDate(userId, languageId);
+        return modelConverter.convertDict(words, advancement != null ? advancement.getDescription() : "");
     }
 
     private Advancement updateDayStreakDate(Integer userId, Integer languageId) {
         Statistic statistic = statisticsRepository.findByUserIdAndLanguageId(userId, languageId);
+        Advancement advancement = null;
         if (statistic != null && statistic.getLastActivityDate() != null && !statistic.getLastActivityDate().isEmpty()) {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             try {
                 LocalDate lastActivityDate = LocalDate.parse(statistic.getLastActivityDate(), dateFormatter);
                 LocalDate today = LocalDate.now();
-
                 if (lastActivityDate.isEqual(today.minusDays(1))) {
-                    this.advancement = statisticsService.getDayStreakAdvancement(userId, languageId);
+                    advancement = statisticsService.getDayStreakAdvancement(userId, languageId);
                     statistic.setLastActivityDate(today.format(dateFormatter));
                     statistic.setDayStreak(statistic.getDayStreak() + 1);
-                    if (advancement != null) {
-                        statistic.setAdvancements(statistic.getAdvancements() + ", " + advancement.getDescription());
-                    }
                 } else if (lastActivityDate.isBefore(today.minusDays(1))) {
                     statistic.setLastActivityDate(today.format(dateFormatter));
                     statistic.setDayStreak(1);
@@ -100,6 +95,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public DictionaryListWithAdvancementDto addWord(DictionaryDto dictionaryDto) {
+        Advancement advancement = null;
         Dictionary existedWord = dictionaryRepository.findByWordAndMeaningAndUserIdAndLanguageId(dictionaryDto.getWord(), dictionaryDto.getMeaning(), dictionaryDto.getUserId(), dictionaryDto.getLanguageId());
         if (existedWord == null) {
             dictionaryRepository.save(modelConverter.convert(dictionaryDto));
@@ -109,7 +105,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         assert statistic != null;
         statistic.setWordsLearned(statistic.getWordsLearned() + 1);
         statisticsRepository.save(statistic);
-        this.advancement = statisticsService.getLearnedWordsAdvancement(dictionaryDto.getUserId(), dictionaryDto.getLanguageId());
+        advancement = statisticsService.getLearnedWordsAdvancement(dictionaryDto.getUserId(), dictionaryDto.getLanguageId());
 
 
         return modelConverter.convertDict(dictionaryRepository.findAllSortedByFirstLetterAndByUserIdAndLanguageId(dictionaryDto.getUserId(), dictionaryDto.getLanguageId()), advancement != null ? advancement.getDescription() : null);

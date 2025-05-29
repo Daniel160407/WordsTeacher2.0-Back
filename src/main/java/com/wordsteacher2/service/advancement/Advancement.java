@@ -19,6 +19,8 @@ public enum Advancement {
     FIFTYCYCLESSTREAK("Grandmaster of Cycles (50 cycles streak)"),
 
     // Day streak advancements (Lore-inspired descriptions)
+    ONEDAYSTREAK("First Flame (1 day streak)"),
+    THREEDAYSTREAK("Kindled Spirit (3 days streak)"),
     WEEKSTREAK("Rising Star (1 week streak)"),
     TWOWEEKSTREAK("Ascendant (2 weeks streak)"),
     THREEWEEKSTREAK("Immortal (3 weeks streak)"),

@@ -63,7 +63,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     @Override
     public Advancement getDayStreakAdvancement(Integer userId, Integer languageId) {
         Statistic statistic = statisticsRepository.findByUserIdAndLanguageId(userId, languageId);
-        int dayStreak = statistic.getDayStreak();
+        int dayStreak = statistic.getDayStreak() + 1;
 
         Advancement advancement = switch (dayStreak) {
             case 365 -> Advancement.ONEYEARSTREAK;
@@ -73,6 +73,8 @@ public class StatisticsServiceImpl implements StatisticsService {
             case 21 -> Advancement.THREEWEEKSTREAK;
             case 14 -> Advancement.TWOWEEKSTREAK;
             case 7 -> Advancement.WEEKSTREAK;
+            case 3 -> Advancement.THREEDAYSTREAK;
+            case 1 -> Advancement.ONEDAYSTREAK;
             default -> null;
         };
 

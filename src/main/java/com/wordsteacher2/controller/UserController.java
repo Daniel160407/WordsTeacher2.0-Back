@@ -3,7 +3,6 @@ package com.wordsteacher2.controller;
 import com.wordsteacher2.dto.UserDto;
 import com.wordsteacher2.freemius.model.PlanWithLanguageId;
 import com.wordsteacher2.freemius.service.exception.NoPermissionException;
-import com.wordsteacher2.redis.RedisService;
 import com.wordsteacher2.service.UserService;
 import com.wordsteacher2.service.exception.InvalidEmailOrPasswordException;
 import com.wordsteacher2.service.exception.UserAlreadyRegisteredException;
@@ -21,13 +20,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     private final JwtUtils jwtUtils;
-    private final RedisService redisService;
 
     @Autowired
-    public UserController(UserService userService, JwtUtils jwtUtils, RedisService redisService) {
+    public UserController(UserService userService, JwtUtils jwtUtils) {
         this.userService = userService;
         this.jwtUtils = jwtUtils;
-        this.redisService = redisService;
     }
 
     @PutMapping
@@ -49,14 +46,6 @@ public class UserController {
         } catch (UserAlreadyRegisteredException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeader) {
-        String token = authHeader.replace("Bearer ", "");
-        long expiration = jwtUtils.extractExpiration(token).getTime() - System.currentTimeMillis();
-        redisService.blockToken(token, expiration);
-        return ResponseEntity.ok("Logged out");
     }
 
     @DeleteMapping
