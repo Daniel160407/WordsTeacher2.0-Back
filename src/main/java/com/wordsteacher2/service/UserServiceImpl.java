@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
             Level level = new Level(1, userId, languageId);
             levelRepository.save(level);
 
-            Statistic statistic = new Statistic(0, 0, 0, userId, languageId);
+            Statistic statistic = new Statistic(0, 0, 0, "", "", userId, languageId);
             statisticsRepository.save(statistic);
 
             return languagesRepository.findFirstByUserId(userId).getId();

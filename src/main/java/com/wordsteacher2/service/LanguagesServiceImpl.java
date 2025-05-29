@@ -61,7 +61,7 @@ public class LanguagesServiceImpl implements LanguagesService {
                 languagesRepository.save(modelConverter.convert(languageDto));
                 Integer languageId = languagesRepository.findByLanguageAndUserId(languageDto.getLanguage(), languageDto.getUserId()).getId();
                 levelRepository.save(new Level(1, languageDto.getUserId(), languageId));
-                statisticsRepository.save(new Statistic(0, 0, 0, languageDto.getUserId(), languageId));
+                statisticsRepository.save(new Statistic(0, 0, 0, "","", languageDto.getUserId(), languageId));
                 return modelConverter.convertLanguagesToDtoList(languagesRepository.findAllByUserId(languageDto.getUserId()));
             }
         }
@@ -75,7 +75,7 @@ public class LanguagesServiceImpl implements LanguagesService {
             languagesRepository.save(modelConverter.convert(languageDto));
             Integer languageId = languagesRepository.findByLanguageAndUserId(languageDto.getLanguage(), languageDto.getUserId()).getId();
             levelRepository.save(new Level(1, languageDto.getUserId(), languageId));
-            statisticsRepository.save(new Statistic(0, 0, 0, languageDto.getUserId(), languageId));
+            statisticsRepository.save(new Statistic(0, 0, 0, "","", languageDto.getUserId(), languageId));
             return modelConverter.convertLanguagesToDtoList(languagesRepository.findAllByUserId(languageDto.getUserId()));
         }
         throw new NoPermissionException();

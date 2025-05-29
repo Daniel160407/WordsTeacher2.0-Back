@@ -32,6 +32,14 @@ public class WordDto {
         this.languageId = languageId;
     }
 
+    public WordDto(String word, String meaning, String wordType, String level, Integer userId) {
+        this.word = word;
+        this.meaning = meaning;
+        this.wordType = wordType;
+        this.level = level;
+        this.userId = userId;
+    }
+
     public WordDto(String word, String meaning, Integer userId, Integer languageId) {
         this.word = word;
         this.meaning = meaning;

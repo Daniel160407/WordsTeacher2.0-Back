@@ -19,4 +19,9 @@ public class PageController {
     public String getDocPage() {
         return "index.html";
     }
+
+    @GetMapping(value = "/crossword")
+    public String getCrosswordPage() {
+        return "index.html";
+    }
 }

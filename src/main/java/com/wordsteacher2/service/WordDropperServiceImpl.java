@@ -14,6 +14,7 @@ import com.wordsteacher2.repository.WordsRepository;
 import com.wordsteacher2.service.advancement.Advancement;
 import com.wordsteacher2.util.ModelConverter;
 import lombok.Getter;
+import org.hibernate.NonUniqueResultException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

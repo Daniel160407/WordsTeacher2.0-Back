@@ -1,13 +1,12 @@
 package com.wordsteacher2.util;
 
 import com.wordsteacher2.dto.*;
-import com.wordsteacher2.model.Dictionary;
-import com.wordsteacher2.model.Language;
-import com.wordsteacher2.model.User;
-import com.wordsteacher2.model.Word;
+import com.wordsteacher2.model.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -20,7 +19,7 @@ public class ModelConverter {
 
     public List<DictionaryDto> convertDictionaryToDtoList(List<Dictionary> words) {
         List<DictionaryDto> convertedDictionary = new ArrayList<>();
-        words.forEach(word -> convertedDictionary.add(new DictionaryDto(word.getWord(), word.getMeaning(), word.getLevel(), word.getUserId(),word.getLanguageId())));
+        words.forEach(word -> convertedDictionary.add(new DictionaryDto(word.getWord(), word.getMeaning(), word.getLevel(), word.getUserId(), word.getLanguageId())));
         return convertedDictionary;
     }
 
@@ -82,6 +81,20 @@ public class ModelConverter {
         return Language.builder()
                 .language(languageDto.getLanguage())
                 .userId(languageDto.getUserId())
+                .build();
+    }
+
+    public StatisticDto convert(Statistic statistic) {
+        List<String> advancementsList = statistic.getAdvancements() != null && !statistic.getAdvancements().isBlank()
+                ? Arrays.asList(statistic.getAdvancements().split(",\\s*"))
+                : Collections.emptyList();
+
+        return StatisticDto.builder()
+                .wordsLearned(statistic.getWordsLearned())
+                .cycles(statistic.getCycles())
+                .dayStreak(statistic.getDayStreak())
+                .advancements(advancementsList)
+                .userId(statistic.getUserId())
                 .build();
     }
 }

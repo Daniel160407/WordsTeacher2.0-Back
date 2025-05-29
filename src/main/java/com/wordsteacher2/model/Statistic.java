@@ -23,15 +23,21 @@ public class Statistic {
     private Integer cycles;
     @Column(name = "day_streak")
     private Integer dayStreak;
+    @Column(name = "advancements")
+    private String advancements;
+    @Column(name = "last_activity")
+    private String lastActivityDate;
     @Column(name = "user_id")
     private Integer userId;
     @Column(name = "language_id")
     private Integer languageId;
 
-    public Statistic(Integer wordsLearned, Integer cycles, Integer dayStreak, Integer userId, Integer languageId) {
+    public Statistic(Integer wordsLearned, Integer cycles, Integer dayStreak, String advancements, String lastActivityDate, Integer userId, Integer languageId) {
         this.wordsLearned = wordsLearned;
         this.cycles = cycles;
         this.dayStreak = dayStreak;
+        this.advancements = advancements;
+        this.lastActivityDate = lastActivityDate;
         this.userId = userId;
         this.languageId = languageId;
     }

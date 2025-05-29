@@ -14,6 +14,9 @@ import com.wordsteacher2.util.ModelConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -35,16 +38,17 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     @Override
-    public List<DictionaryDto> getWords(String type, Integer userId, Integer languageId, Boolean tests) {
+    public DictionaryListWithAdvancementDto getWords(String type, Integer userId, Integer languageId, Boolean tests) {
         List<Dictionary> words = dictionaryRepository.findAllSortedByFirstLetterAndByUserIdAndLanguageId(userId, languageId);
+
         if ("word".equals(type)) {
             Iterator<Dictionary> iterator = words.iterator();
-
             while (iterator.hasNext()) {
                 Dictionary dictionary = iterator.next();
                 String word = dictionary.getWord();
 
-                if (word.trim().split("\\s+").length > 1 && Arrays.stream(new String[]{"Der", "Die", "Das", "Sich"}).noneMatch(word::startsWith)) {
+                if (word.trim().split("\\s+").length > 1 &&
+                        Arrays.stream(new String[]{"Der", "Die", "Das", "Sich"}).noneMatch(word::startsWith)) {
                     iterator.remove();
                 }
             }
@@ -53,14 +57,46 @@ public class DictionaryServiceImpl implements DictionaryService {
         if (tests) {
             Optional<User> userOptional = usersRepository.findById(userId);
             if (userOptional.isPresent() && !userOptional.get().getPlan().equals("free")) {
-                return modelConverter.convertDictionaryToDtoList(words);
+                return modelConverter.convertDict(words, "");
             } else {
                 throw new NoPermissionException();
             }
         }
-        return modelConverter.convertDictionaryToDtoList(words);
+
+        return modelConverter.convertDict(
+                words, updateDayStreakDate(userId, languageId) != null ?
+                        updateDayStreakDate(userId, languageId).getDescription() : "");
     }
 
+    private Advancement updateDayStreakDate(Integer userId, Integer languageId) {
+        Statistic statistic = statisticsRepository.findByUserIdAndLanguageId(userId, languageId);
+        if (statistic != null && statistic.getLastActivityDate() != null && !statistic.getLastActivityDate().isEmpty()) {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            try {
+                LocalDate lastActivityDate = LocalDate.parse(statistic.getLastActivityDate(), dateFormatter);
+                LocalDate today = LocalDate.now();
+
+                if (lastActivityDate.isEqual(today.minusDays(1))) {
+                    this.advancement = statisticsService.getDayStreakAdvancement(userId, languageId);
+                    statistic.setLastActivityDate(today.format(dateFormatter));
+                    statistic.setDayStreak(statistic.getDayStreak() + 1);
+                    if (advancement != null) {
+                        statistic.setAdvancements(statistic.getAdvancements() + ", " + advancement.getDescription());
+                    }
+                } else if (lastActivityDate.isBefore(today.minusDays(1))) {
+                    statistic.setLastActivityDate(today.format(dateFormatter));
+                    statistic.setDayStreak(1);
+                    statisticsRepository.save(statistic);
+                }
+            } catch (DateTimeException ignored) {
+            }
+        } else if (statistic.getLastActivityDate().isEmpty()) {
+            statistic.setLastActivityDate(LocalDate.now().toString());
+        }
+
+        statisticsRepository.save(statistic);
+        return advancement;
+    }
 
     @Override
     public DictionaryListWithAdvancementDto addWord(DictionaryDto dictionaryDto) {
@@ -101,6 +137,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         Dictionary dictionary = dictionaryRepository.findByWordAndMeaningAndUserIdAndLanguageId(original.getWord(), original.getMeaning(), userId, languageId);
         dictionary.setWord(changed.getWord());
         dictionary.setMeaning(changed.getMeaning());
+        dictionary.setLevel(changed.getLevel());
 
         dictionaryRepository.save(dictionary);
         return modelConverter.convertDictionaryToDtoList(dictionaryRepository.findAllSortedByFirstLetterAndByUserIdAndLanguageId(userId, languageId));

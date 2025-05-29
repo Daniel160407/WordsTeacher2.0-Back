@@ -8,7 +8,7 @@ import java.util.List;
 
 @Service
 public interface DictionaryService {
-    List<DictionaryDto> getWords(String type, Integer userId, Integer languageId, Boolean tests);
+    DictionaryListWithAdvancementDto getWords(String type, Integer userId, Integer languageId, Boolean tests);
 
     DictionaryListWithAdvancementDto addWord(DictionaryDto dictionaryDto);
 
