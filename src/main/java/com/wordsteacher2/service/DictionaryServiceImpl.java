@@ -37,7 +37,7 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     @Override
-    public DictionaryListWithAdvancementDto getWords(String type, Integer userId, Integer languageId, Boolean tests) {
+    public List<DictionaryDto> getWords(String type, Integer userId, Integer languageId, Boolean tests) {
         List<Dictionary> words = dictionaryRepository.findAllSortedByFirstLetterAndByUserIdAndLanguageId(userId, languageId);
 
         if ("word".equals(type)) {
@@ -56,41 +56,13 @@ public class DictionaryServiceImpl implements DictionaryService {
         if (tests) {
             Optional<User> userOptional = usersRepository.findById(userId);
             if (userOptional.isPresent() && !userOptional.get().getPlan().equals("free")) {
-                return modelConverter.convertDict(words, "");
+                return modelConverter.convertDictionaryToDtoList(words);
             } else {
                 throw new NoPermissionException();
             }
         }
 
-        Advancement advancement = updateDayStreakDate(userId, languageId);
-        return modelConverter.convertDict(words, advancement != null ? advancement.getDescription() : "");
-    }
-
-    private Advancement updateDayStreakDate(Integer userId, Integer languageId) {
-        Statistic statistic = statisticsRepository.findByUserIdAndLanguageId(userId, languageId);
-        Advancement advancement = null;
-        if (statistic != null && statistic.getLastActivityDate() != null && !statistic.getLastActivityDate().isEmpty()) {
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            try {
-                LocalDate lastActivityDate = LocalDate.parse(statistic.getLastActivityDate(), dateFormatter);
-                LocalDate today = LocalDate.now();
-                if (lastActivityDate.isEqual(today.minusDays(1))) {
-                    advancement = statisticsService.getDayStreakAdvancement(userId, languageId);
-                    statistic.setLastActivityDate(today.format(dateFormatter));
-                    statistic.setDayStreak(statistic.getDayStreak() + 1);
-                } else if (lastActivityDate.isBefore(today.minusDays(1))) {
-                    statistic.setLastActivityDate(today.format(dateFormatter));
-                    statistic.setDayStreak(1);
-                    statisticsRepository.save(statistic);
-                }
-            } catch (DateTimeException ignored) {
-            }
-        } else if (statistic.getLastActivityDate().isEmpty()) {
-            statistic.setLastActivityDate(LocalDate.now().toString());
-        }
-
-        statisticsRepository.save(statistic);
-        return advancement;
+        return modelConverter.convertDictionaryToDtoList(words);
     }
 
     @Override

@@ -9,6 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class StatisticsServiceImpl implements StatisticsService {
     private final StatisticsRepository statisticsRepository;
@@ -83,8 +91,16 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public StatisticDto getStatistics(Integer userId, Integer languageId) {
+        Advancement advancement = updateDayStreakDate(userId, languageId);
         Statistic statistic = statisticsRepository.findByUserIdAndLanguageId(userId, languageId);
-        return modelConverter.convert(statistic);
+        return modelConverter.convert(statistic, advancement != null ? advancement.getDescription() : "");
+    }
+
+    @Override
+    public List<String> getAdvancements() {
+        return Arrays.stream(Advancement.values())
+                .map(Advancement::getDescription)
+                .collect(Collectors.toList());
     }
 
     private Advancement applyAdvancement(Statistic statistic, Advancement advancement) {
@@ -103,6 +119,33 @@ public class StatisticsServiceImpl implements StatisticsService {
         statistic.setAdvancements(updated);
         statisticsRepository.save(statistic);
 
+        return advancement;
+    }
+
+    private Advancement updateDayStreakDate(Integer userId, Integer languageId) {
+        Statistic statistic = statisticsRepository.findByUserIdAndLanguageId(userId, languageId);
+        Advancement advancement = null;
+        if (statistic != null && statistic.getLastActivityDate() != null && !statistic.getLastActivityDate().isEmpty()) {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            try {
+                LocalDate lastActivityDate = LocalDate.parse(statistic.getLastActivityDate(), dateFormatter);
+                LocalDate today = LocalDate.now();
+                if (lastActivityDate.isEqual(today.minusDays(1))) {
+                    advancement = getDayStreakAdvancement(userId, languageId);
+                    statistic.setLastActivityDate(today.format(dateFormatter));
+                    statistic.setDayStreak(statistic.getDayStreak() + 1);
+                } else if (lastActivityDate.isBefore(today.minusDays(1))) {
+                    statistic.setLastActivityDate(today.format(dateFormatter));
+                    statistic.setDayStreak(1);
+                    statisticsRepository.save(statistic);
+                }
+            } catch (DateTimeException ignored) {
+            }
+        } else if (statistic.getLastActivityDate().isEmpty()) {
+            statistic.setLastActivityDate(LocalDate.now().toString());
+        }
+
+        statisticsRepository.save(statistic);
         return advancement;
     }
 }

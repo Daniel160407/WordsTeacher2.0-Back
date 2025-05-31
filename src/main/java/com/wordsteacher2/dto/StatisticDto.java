@@ -12,5 +12,6 @@ public class StatisticDto {
     private Integer cycles;
     private Integer dayStreak;
     private List<String> advancements;
+    private String advancement;
     private Integer userId;
 }

@@ -24,4 +24,9 @@ public class StatisticsController {
     public ResponseEntity<?> getStatistics(@RequestParam Integer userid, @RequestParam Integer languageid) {
         return ResponseEntity.ok(statisticsService.getStatistics(userid, languageid));
     }
+
+    @GetMapping("/advancements")
+    public ResponseEntity<?> getAdvancements() {
+        return ResponseEntity.ok(statisticsService.getAdvancements());
+    }
 }

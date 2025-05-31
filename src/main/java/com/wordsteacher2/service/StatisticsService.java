@@ -4,6 +4,8 @@ import com.wordsteacher2.dto.StatisticDto;
 import com.wordsteacher2.service.advancement.Advancement;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface StatisticsService {
     Advancement checkStatistics();
@@ -15,4 +17,6 @@ public interface StatisticsService {
     Advancement getDayStreakAdvancement(Integer userId, Integer languageId);
 
     StatisticDto getStatistics(Integer userId, Integer languageId);
+
+    List<String> getAdvancements();
 }

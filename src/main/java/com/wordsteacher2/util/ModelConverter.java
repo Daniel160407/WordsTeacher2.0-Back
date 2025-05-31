@@ -84,7 +84,7 @@ public class ModelConverter {
                 .build();
     }
 
-    public StatisticDto convert(Statistic statistic) {
+    public StatisticDto convert(Statistic statistic, String advancement) {
         List<String> advancementsList = statistic.getAdvancements() != null && !statistic.getAdvancements().isBlank()
                 ? Arrays.asList(statistic.getAdvancements().split(",\\s*"))
                 : Collections.emptyList();
@@ -94,6 +94,7 @@ public class ModelConverter {
                 .cycles(statistic.getCycles())
                 .dayStreak(statistic.getDayStreak())
                 .advancements(advancementsList)
+                .advancement(advancement)
                 .userId(statistic.getUserId())
                 .build();
     }
