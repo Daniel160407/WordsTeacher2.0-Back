@@ -16,6 +16,7 @@ public enum Advancement {
     FIVECYCLESSTREAK("Adept's Cycle (5 cycles streak)"),
     TENCYCLESSTREAK("Master of Cycles (10 cycles streak)"),
     TWENTYCYCLESSTREAK("Wizard of Cycles (20 cycles streak)"),
+    THIRTYCYCLESSTREAK("Sage of Cycles (30 cycles streak)"),
     FIFTYCYCLESSTREAK("Grandmaster of Cycles (50 cycles streak)"),
 
     // Day streak advancements (Lore-inspired descriptions)
