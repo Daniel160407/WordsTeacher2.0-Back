@@ -21,6 +21,8 @@ public class Word {
     private String word;
     @Column(name = "meaning")
     private String meaning;
+    @Column(name = "example")
+    private String example;
     @Column(name = "word_type")
     private String wordType;
     @Column(name = "active")
@@ -32,9 +34,10 @@ public class Word {
     @Column(name = "language_id")
     private Integer languageId;
 
-    public Word(String word, String meaning, String wordType, String active, Integer userId, Integer languageId) {
+    public Word(String word, String meaning, String example, String wordType, String active, Integer userId, Integer languageId) {
         this.word = word;
         this.meaning = meaning;
+        this.example = example;
         this.wordType = wordType;
         this.active = active;
         this.userId = userId;

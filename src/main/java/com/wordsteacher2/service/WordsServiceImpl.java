@@ -70,6 +70,7 @@ public class WordsServiceImpl implements WordsService {
         Word foundWord = wordsRepository.findByWordAndMeaningAndUserIdAndLanguageId(original.getWord(), original.getMeaning(), original.getUserId(), original.getLanguageId());
         foundWord.setWord(changed.getWord());
         foundWord.setMeaning(changed.getMeaning());
+        foundWord.setExample(changed.getExample());
         foundWord.setWordType(changed.getWordType());
         foundWord.setLevel(changed.getLevel());
 

@@ -13,13 +13,13 @@ import java.util.List;
 public class ModelConverter {
     public List<WordDto> convertWordsToDtoList(List<Word> words) {
         List<WordDto> wordDtos = new ArrayList<>();
-        words.forEach(word -> wordDtos.add(new WordDto(word.getWord(), word.getMeaning(), word.getWordType(), word.getActive(), word.getLevel(), word.getUserId(), word.getLanguageId())));
+        words.forEach(word -> wordDtos.add(new WordDto(word.getWord(), word.getMeaning(), word.getExample(), word.getWordType(), word.getActive(), word.getLevel(), word.getUserId(), word.getLanguageId())));
         return wordDtos;
     }
 
     public List<DictionaryDto> convertDictionaryToDtoList(List<Dictionary> words) {
         List<DictionaryDto> convertedDictionary = new ArrayList<>();
-        words.forEach(word -> convertedDictionary.add(new DictionaryDto(word.getWord(), word.getMeaning(), word.getLevel(), word.getUserId(), word.getLanguageId())));
+        words.forEach(word -> convertedDictionary.add(new DictionaryDto(word.getWord(), word.getMeaning(), word.getExample(), word.getLevel(), word.getUserId(), word.getLanguageId())));
         return convertedDictionary;
     }
 
@@ -27,6 +27,7 @@ public class ModelConverter {
         return Word.builder()
                 .word(wordDto.getWord())
                 .meaning(wordDto.getMeaning())
+                .example(wordDto.getExample())
                 .wordType(wordDto.getWordType())
                 .active(wordDto.getActive())
                 .level(wordDto.getLevel())
@@ -39,6 +40,7 @@ public class ModelConverter {
         return Dictionary.builder()
                 .word(dictionaryDto.getWord())
                 .meaning(dictionaryDto.getMeaning())
+                .example(dictionaryDto.getExample())
                 .level(dictionaryDto.getLevel())
                 .userId(dictionaryDto.getUserId())
                 .languageId(dictionaryDto.getLanguageId())
@@ -47,7 +49,7 @@ public class ModelConverter {
 
     public WordListWithAdvancementDto convert(List<Word> words, String advancement) {
         List<WordDto> wordDtos = new ArrayList<>();
-        words.forEach(word -> wordDtos.add(new WordDto(word.getWord(), word.getMeaning(), word.getLevel(), word.getUserId(), word.getLanguageId())));
+        words.forEach(word -> wordDtos.add(new WordDto(word.getWord(), word.getMeaning(), word.getExample(), word.getLevel(), word.getUserId(), word.getLanguageId())));
         return WordListWithAdvancementDto.builder()
                 .wordDtos(wordDtos)
                 .advancement(advancement)
@@ -56,7 +58,7 @@ public class ModelConverter {
 
     public DictionaryListWithAdvancementDto convertDict(List<Dictionary> dictionary, String advancement) {
         List<DictionaryDto> dictionaryDtos = new ArrayList<>();
-        dictionary.forEach(word -> dictionaryDtos.add(new DictionaryDto(word.getWord(), word.getMeaning(), word.getLevel(), word.getUserId(), word.getLanguageId())));
+        dictionary.forEach(word -> dictionaryDtos.add(new DictionaryDto(word.getWord(), word.getMeaning(), word.getExample(), word.getLevel(), word.getUserId(), word.getLanguageId())));
         return DictionaryListWithAdvancementDto.builder()
                 .dictionaryDtos(dictionaryDtos)
                 .advancement(advancement)

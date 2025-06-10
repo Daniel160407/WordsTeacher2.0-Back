@@ -105,6 +105,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         Dictionary dictionary = dictionaryRepository.findByWordAndMeaningAndUserIdAndLanguageId(original.getWord(), original.getMeaning(), userId, languageId);
         dictionary.setWord(changed.getWord());
         dictionary.setMeaning(changed.getMeaning());
+        dictionary.setExample(changed.getExample());
         dictionary.setLevel(changed.getLevel());
 
         dictionaryRepository.save(dictionary);

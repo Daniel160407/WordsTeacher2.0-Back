@@ -21,6 +21,8 @@ public class Dictionary {
     private String word;
     @Column(name = "meaning")
     private String meaning;
+    @Column(name = "example")
+    private String example;
     @Column(name = "level")
     private String level;
     @Column(name = "user_id")
@@ -28,9 +30,10 @@ public class Dictionary {
     @Column(name = "language_id")
     private Integer languageId;
 
-    public Dictionary(String word, String meaning, Integer userId, Integer languageId) {
+    public Dictionary(String word, String meaning, String example, Integer userId, Integer languageId) {
         this.word = word;
         this.meaning = meaning;
+        this.example = example;
         this.userId = userId;
         this.languageId = languageId;
     }

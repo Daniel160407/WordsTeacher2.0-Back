@@ -13,14 +13,23 @@ import lombok.NoArgsConstructor;
 public class DictionaryDto {
     private String word;
     private String meaning;
+    private String example;
     private String level;
     private Integer userId;
-    private Integer LanguageId;
+    private Integer languageId;
 
     public DictionaryDto(String word, String meaning, Integer userId, Integer languageId) {
         this.word = word;
         this.meaning = meaning;
         this.userId = userId;
-        LanguageId = languageId;
+        this.languageId = languageId;
+    }
+
+    public DictionaryDto(String word, String meaning, String example, Integer userId, Integer languageId) {
+        this.word = word;
+        this.meaning = meaning;
+        this.example = example;
+        this.userId = userId;
+        this.languageId = languageId;
     }
 }

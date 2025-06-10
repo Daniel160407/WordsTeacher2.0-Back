@@ -56,7 +56,15 @@ public class WordsController {
                                         @RequestParam String wordtype,
                                         @RequestParam Integer userid,
                                         @RequestParam Integer languageid) {
-        return ResponseEntity.ok().body(wordsService.deleteWord(new WordDto(word, meaning, wordtype, userid, languageid)));
+        return ResponseEntity.ok().body(wordsService.deleteWord(
+                WordDto.builder()
+                        .word(word)
+                        .meaning(meaning)
+                        .wordType(wordtype)
+                        .userId(userid)
+                        .languageId(languageid)
+                        .build()
+        ));
     }
 
     @RequestMapping(method = RequestMethod.OPTIONS)

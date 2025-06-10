@@ -29,8 +29,6 @@ public class WordDropperServiceImpl implements WordDropperService {
     private final UsersRepository usersRepository;
     private final StatisticsService statisticsService;
     private final ModelConverter modelConverter;
-    @Getter
-    private Advancement advancement;
 
     @Autowired
     public WordDropperServiceImpl(WordsRepository wordsRepository, LevelRepository levelRepository, StatisticsRepository statisticsRepository, UsersRepository usersRepository, StatisticsService statisticsService, ModelConverter modelConverter) {
@@ -61,6 +59,7 @@ public class WordDropperServiceImpl implements WordDropperService {
     public WordListWithAdvancementDto dropWords(List<WordDto> wordDtos) {
         Integer userId = wordDtos.get(0).getUserId();
         Integer languageId = wordDtos.get(0).getLanguageId();
+        Advancement advancement = null;
         for (WordDto wordDto : wordDtos) {
             Word word = wordsRepository.findByWordAndMeaningAndUserIdAndLanguageId(wordDto.getWord(), wordDto.getMeaning(), userId, languageId);
             word.setActive("false");
@@ -84,7 +83,7 @@ public class WordDropperServiceImpl implements WordDropperService {
                 Statistic statistic = statisticsRepository.findByUserIdAndLanguageId(userId, languageId);
                 statistic.setCycles(statistic.getCycles() + 1);
                 statisticsRepository.save(statistic);
-                this.advancement = statisticsService.getCyclesAdvancement(userId, languageId);
+                advancement = statisticsService.getCyclesAdvancement(userId, languageId);
             } else {
                 level.setLevel(level.getLevel() + 1);
             }
