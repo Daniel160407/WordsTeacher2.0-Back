@@ -7,8 +7,11 @@ public enum Advancement {
     TENWORDS("The First Step (Learn 10 words)"),
     FIFTYWORDS("The Path of Knowledge (Learn 50 words)"),
     HUNDREDWORDS("The Scholar's Journey (Learn 100 words)"),
+    THREEHUNDREDWORDS("Wielder of Words (Learn 300 words)"),
     FIVEHUNDREDWORDS("Master of Words (Learn 500 words)"),
+    SEVENHUNDREDWORDS("Enlightened Mind (Learn 700 words)"),
     THOUSANDWORDS("The Wordsmith (Learn 1,000 words)"),
+    THREETHOUSANDWORDS("Language Alchemist (Learn 3,000 words)"),
     FIVETHOUSANDWORDS("The Polyglot (Learn 5,000 words)"),
 
     // Cycle advancements (Lore-inspired descriptions)

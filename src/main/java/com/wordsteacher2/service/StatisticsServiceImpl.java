@@ -40,8 +40,11 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         Advancement advancement = switch (wordsLearned) {
             case 5000 -> Advancement.FIVETHOUSANDWORDS;
+            case 3000 -> Advancement.THREETHOUSANDWORDS;
             case 1000 -> Advancement.THOUSANDWORDS;
+            case 700 -> Advancement.SEVENHUNDREDWORDS;
             case 500 -> Advancement.FIVEHUNDREDWORDS;
+            case 300 -> Advancement.THREEHUNDREDWORDS;
             case 100 -> Advancement.HUNDREDWORDS;
             case 50 -> Advancement.FIFTYWORDS;
             case 10 -> Advancement.TENWORDS;
@@ -58,6 +61,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         Advancement advancement = switch (cycles) {
             case 50 -> Advancement.FIFTYCYCLESSTREAK;
+            case 30 -> Advancement.THIRTYCYCLESSTREAK;
             case 20 -> Advancement.TWENTYCYCLESSTREAK;
             case 10 -> Advancement.TENCYCLESSTREAK;
             case 5 -> Advancement.FIVECYCLESSTREAK;
@@ -136,7 +140,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     statistic.setDayStreak(statistic.getDayStreak() + 1);
                 } else if (lastActivityDate.isBefore(today.minusDays(1))) {
                     statistic.setLastActivityDate(today.format(dateFormatter));
-                    statistic.setDayStreak(1);
+                    statistic.setDayStreak(0);
                     statisticsRepository.save(statistic);
                 }
             } catch (DateTimeException ignored) {
