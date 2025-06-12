@@ -33,6 +33,15 @@ public class LanguageController {
         }
     }
 
+    @GetMapping("/languagebyid")
+    public ResponseEntity<?> getLanguageById(@RequestParam Integer id, @RequestParam Integer userid) {
+        try {
+            return ResponseEntity.ok(languagesService.getLanguageById(id, userid));
+        } catch (NoPermissionException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
     @PostMapping
     public ResponseEntity<?> addLanguage(@RequestBody LanguageDto language) {
         try {

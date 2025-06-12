@@ -45,8 +45,23 @@ public class LanguagesServiceImpl implements LanguagesService {
         Optional<User> userOptional = usersRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            if (user.getPlan().equals("ultimate")) {
+            if (!user.getPlan().equals("free")) {
                 return languagesRepository.findByLanguageAndUserId(language, userId).getId();
+            }
+        }
+        throw new NoPermissionException();
+    }
+
+    @Override
+    public String getLanguageById(Integer id, Integer userId) {
+        Optional<User> userOptional = usersRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (!user.getPlan().equals("free")) {
+                Optional<Language> languageOptional = languagesRepository.findById(id);
+                if (languageOptional.isPresent()) {
+                    return languageOptional.get().getLanguage();
+                }
             }
         }
         throw new NoPermissionException();
@@ -57,11 +72,11 @@ public class LanguagesServiceImpl implements LanguagesService {
         Optional<User> userOptional = usersRepository.findById(languageDto.getUserId());
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            if (user.getPlan().equals("ultimate")) {
+            if (!user.getPlan().equals("free")) {
                 languagesRepository.save(modelConverter.convert(languageDto));
                 Integer languageId = languagesRepository.findByLanguageAndUserId(languageDto.getLanguage(), languageDto.getUserId()).getId();
                 levelRepository.save(new Level(1, languageDto.getUserId(), languageId));
-                statisticsRepository.save(new Statistic(0, 0, 0, "","", languageDto.getUserId(), languageId));
+                statisticsRepository.save(new Statistic(0, 0, 0, "", "", languageDto.getUserId(), languageId));
                 return modelConverter.convertLanguagesToDtoList(languagesRepository.findAllByUserId(languageDto.getUserId()));
             }
         }
@@ -71,11 +86,11 @@ public class LanguagesServiceImpl implements LanguagesService {
     @Override
     public List<LanguageDto> addFirstLanguage(LanguageDto languageDto) {
         Optional<User> userOptional = usersRepository.findById(languageDto.getUserId());
-        if (userOptional.isPresent() && userOptional.get().getPlan().equals("Free") && languagesRepository.findFirstByUserId(languageDto.getUserId()) == null) {
+        if (userOptional.isPresent() && userOptional.get().getPlan().equals("free") && languagesRepository.findFirstByUserId(languageDto.getUserId()) == null) {
             languagesRepository.save(modelConverter.convert(languageDto));
             Integer languageId = languagesRepository.findByLanguageAndUserId(languageDto.getLanguage(), languageDto.getUserId()).getId();
             levelRepository.save(new Level(1, languageDto.getUserId(), languageId));
-            statisticsRepository.save(new Statistic(0, 0, 0, "","", languageDto.getUserId(), languageId));
+            statisticsRepository.save(new Statistic(0, 0, 0, "", "", languageDto.getUserId(), languageId));
             return modelConverter.convertLanguagesToDtoList(languagesRepository.findAllByUserId(languageDto.getUserId()));
         }
         throw new NoPermissionException();
@@ -86,7 +101,7 @@ public class LanguagesServiceImpl implements LanguagesService {
         Optional<User> userOptional = usersRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            if (user.getPlan().equals("ultimate") && languagesRepository.findByLanguageAndUserId(language, userId) != null) {
+            if (!user.getPlan().equals("free") && languagesRepository.findByLanguageAndUserId(language, userId) != null) {
                 Integer languageId = languagesRepository.findByLanguageAndUserId(language, userId).getId();
                 levelRepository.deleteByUserIdAndLanguageId(userId, languageId);
                 statisticsRepository.deleteByUserIdAndLanguageId(userId, languageId);

@@ -12,6 +12,8 @@ public interface LanguagesService {
 
     Integer getLanguageId(String language, Integer userId);
 
+    String getLanguageById(Integer id, Integer userId);
+
     List<LanguageDto> addLanguage(LanguageDto languageDto);
 
     List<LanguageDto> addFirstLanguage(LanguageDto languageDto);
