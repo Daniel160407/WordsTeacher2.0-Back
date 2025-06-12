@@ -23,4 +23,6 @@ public class User {
     private String password;
     @Column(name = "plan")
     private String plan;
+    @Column(name = "registration_date")
+    private String registrationDate;
 }

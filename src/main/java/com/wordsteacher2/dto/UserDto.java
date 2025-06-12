@@ -10,6 +10,7 @@ public class UserDto {
     private String password;
     private String language;
     private String plan;
+    private String registrationDate;
 
     @Override
     public String toString() {

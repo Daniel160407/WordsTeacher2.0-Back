@@ -65,11 +65,12 @@ public class ModelConverter {
                 .build();
     }
 
-    public User convert(UserDto userDto) {
+    public User convert(UserDto userDto, String registrationDate) {
         return User.builder()
                 .email(userDto.getEmail())
                 .password(userDto.getPassword())
                 .plan(userDto.getPlan())
+                .registrationDate(registrationDate)
                 .build();
     }
 

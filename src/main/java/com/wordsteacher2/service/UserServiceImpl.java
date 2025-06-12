@@ -15,6 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+
 @Service
 public class UserServiceImpl implements UserService {
     private final UsersRepository usersRepository;
@@ -44,16 +48,31 @@ public class UserServiceImpl implements UserService {
         if (user == null || !passwordEncoder.matches(userDto.getPassword(), user.getPassword())) {
             throw new InvalidEmailOrPasswordException();
         } else {
-            return new PlanWithLanguageId(user.getId(), user.getPlan(), languagesRepository.findFirstByUserId(user.getId()).getId());
+            LocalDate today = LocalDate.now();
+            LocalDate registrationDate = LocalDate.parse(user.getRegistrationDate(), DateTimeFormatter.ISO_DATE);
+
+            if (ChronoUnit.DAYS.between(registrationDate, today) >= 7 && user.getPlan().equals("temp")) {
+                user.setPlan("free");
+                usersRepository.save(user);
+            }
+
+            return new PlanWithLanguageId(
+                    user.getId(),
+                    user.getPlan(),
+                    languagesRepository.findFirstByUserId(user.getId()).getId()
+            );
         }
     }
 
     @Override
     public Integer register(UserDto userDto) {
         if (usersRepository.findByEmail(userDto.getEmail()) == null) {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate registrationDate = LocalDate.now();
+
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-            userDto.setPlan("free");
-            usersRepository.save(modelConverter.convert(userDto));
+            userDto.setPlan("temp");
+            usersRepository.save(modelConverter.convert(userDto, registrationDate.format(dateFormatter)));
 
             Integer userId = usersRepository.findByEmail(userDto.getEmail()).getId();
             languagesRepository.save(new Language(userDto.getLanguage(), userId));
